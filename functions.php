@@ -17,6 +17,14 @@ if (!defined('CLARITY_BANGUMI_CACHE_TTL')) {
     define('CLARITY_BANGUMI_CACHE_TTL', 21600);
 }
 
+if (!defined('CLARITY_GITHUB_UPDATE_TTL')) {
+    define('CLARITY_GITHUB_UPDATE_TTL', 1800);
+}
+
+if (!defined('CLARITY_GITHUB_REPO')) {
+    define('CLARITY_GITHUB_REPO', 'jkjoy/Theme-Clarity');
+}
+
 function themeConfig($form)
 {
     $logo = new \Typecho\Widget\Helper\Form\Element\Text(
@@ -708,7 +716,11 @@ function themeConfig($form)
     $backupTarget->input->setAttribute('id', 'clarity-backup-target');
     $form->addInput($backupTarget);
 
-    $repo = 'jkjoy/Theme-Clarity';
+    $updateAction = new \Typecho\Widget\Helper\Form\Element\Hidden('clarity_update_action', null, '');
+    $updateAction->input->setAttribute('id', 'clarity-update-action');
+    $form->addInput($updateAction);
+
+    $repo = defined('CLARITY_GITHUB_REPO') ? CLARITY_GITHUB_REPO : 'jkjoy/Theme-Clarity';
     $updateInfo = clarity_github_update_info($repo);
     $backups = clarity_theme_backups_read();
     $backupListHtml = '';
@@ -758,6 +770,15 @@ function themeConfig($form)
         if ($checked !== '') {
             echo '<br><span class="description">' . _t('最近检查：') . $checked . '</span>';
         }
+        echo '</div>';
+        echo '<div style="margin-top:8px;">';
+        echo '<button type="button" class="btn" data-update-action="check">' . _t('立即检查更新') . '</button>';
+        echo '</div></li></ul>';
+    } else {
+        echo '<ul class="typecho-option"><li>';
+        echo '<label class="typecho-label">' . _t('Clarity主题更新') . '</label>';
+        echo '<div style="margin-top:8px;">';
+        echo '<button type="button" class="btn" data-update-action="check">' . _t('立即检查更新') . '</button>';
         echo '</div></li></ul>';
     }
 
@@ -771,7 +792,7 @@ function themeConfig($form)
     echo '<div id="clarity-backup-message" class="description" style="margin-top:6px;display:none;"></div>';
     echo '</li></ul>';
 
-    echo '<script>(function(){var init=function(){var form=document.querySelector(\'form[action*="themes-edit"]\');var actionInput=document.getElementById(\'clarity-backup-action\');var targetInput=document.getElementById(\'clarity-backup-target\');var message=document.getElementById(\'clarity-backup-message\');if(!form||!actionInput||!targetInput){return;}var showMsg=function(text,type){if(!message){return;}message.textContent=text;message.style.display=\'block\';if(type===\'success\'){message.style.color=\'#1a7f37\';}else if(type===\'warn\'){message.style.color=\'#b78103\';}else{message.style.color=\'#d14343\';}};document.querySelectorAll(\'[data-backup-action]\').forEach(function(btn){btn.addEventListener(\'click\',function(){var action=btn.getAttribute(\'data-backup-action\');if(!action){return;}var target=btn.getAttribute(\'data-backup-id\')||\'\';if((action===\'restore\'||action===\'delete\')&&!target){showMsg(\'请选择要操作的备份\',\'error\');return;}if(action===\'delete\'){if(!btn.dataset.confirmed){btn.dataset.confirmed=\'1\';showMsg(\'再次点击删除以确认\', \'warn\');setTimeout(function(){btn.dataset.confirmed=\'\';}, 3000);return;}btn.dataset.confirmed=\'\';}actionInput.value=action;targetInput.value=target;form.submit();});});};if(document.readyState===\'loading\'){document.addEventListener(\'DOMContentLoaded\',init);}else{init();}})();</script>';
+    echo '<script>(function(){var init=function(){var form=document.querySelector(\'form[action*="themes-edit"]\');var actionInput=document.getElementById(\'clarity-backup-action\');var targetInput=document.getElementById(\'clarity-backup-target\');var updateInput=document.getElementById(\'clarity-update-action\');var message=document.getElementById(\'clarity-backup-message\');if(!form){return;}var showMsg=function(text,type){if(!message){return;}message.textContent=text;message.style.display=\'block\';if(type===\'success\'){message.style.color=\'#1a7f37\';}else if(type===\'warn\'){message.style.color=\'#b78103\';}else{message.style.color=\'#d14343\';}};document.querySelectorAll(\'[data-backup-action]\').forEach(function(btn){btn.addEventListener(\'click\',function(){if(!actionInput||!targetInput){return;}var action=btn.getAttribute(\'data-backup-action\');if(!action){return;}var target=btn.getAttribute(\'data-backup-id\')||\'\';if((action===\'restore\'||action===\'delete\')&&!target){showMsg(\'请选择要操作的备份\',\'error\');return;}if(action===\'delete\'){if(!btn.dataset.confirmed){btn.dataset.confirmed=\'1\';showMsg(\'再次点击删除以确认\', \'warn\');setTimeout(function(){btn.dataset.confirmed=\'\';}, 3000);return;}btn.dataset.confirmed=\'\';}actionInput.value=action;targetInput.value=target;if(updateInput){updateInput.value=\'\';}form.submit();});});document.querySelectorAll(\'[data-update-action]\').forEach(function(btn){btn.addEventListener(\'click\',function(){if(!updateInput){return;}var action=btn.getAttribute(\'data-update-action\');if(!action){return;}updateInput.value=action;if(actionInput){actionInput.value=\'\';}if(targetInput){targetInput.value=\'\';}form.submit();});});};if(document.readyState===\'loading\'){document.addEventListener(\'DOMContentLoaded\',init);}else{init();}})();</script>';
 }
 
 function themeConfigHandle($settings, $isInit)
@@ -782,6 +803,19 @@ function themeConfigHandle($settings, $isInit)
 
     $action = isset($settings['clarity_backup_action']) ? (string) $settings['clarity_backup_action'] : '';
     $target = isset($settings['clarity_backup_target']) ? (string) $settings['clarity_backup_target'] : '';
+    $updateAction = isset($settings['clarity_update_action']) ? (string) $settings['clarity_update_action'] : '';
+
+    if ($updateAction === 'check') {
+        clarity_db_set_option_value(clarity_theme_update_key(), '');
+        $repo = defined('CLARITY_GITHUB_REPO') ? CLARITY_GITHUB_REPO : 'jkjoy/Theme-Clarity';
+        $info = clarity_github_update_info($repo);
+        if (is_array($info) && !empty($info['latest'])) {
+            \Widget\Notice::alloc()->set(_t('已刷新更新信息'), 'success');
+        } else {
+            \Widget\Notice::alloc()->set(_t('暂无法获取更新信息'), 'error');
+        }
+        return true;
+    }
 
     if ($action === 'backup') {
         $current = clarity_theme_read_options();
@@ -1046,7 +1080,7 @@ function clarity_theme_save_options(array $settings): void
 
 function clarity_theme_clean_settings(array $settings): array
 {
-    unset($settings['clarity_backup_action'], $settings['clarity_backup_target']);
+    unset($settings['clarity_backup_action'], $settings['clarity_backup_target'], $settings['clarity_update_action']);
     return $settings;
 }
 
@@ -1084,7 +1118,7 @@ function clarity_github_update_info(string $repo): ?array
 
     $cacheTime = (int) ($cache['time'] ?? 0);
     $cacheData = is_array($cache['data'] ?? null) ? $cache['data'] : null;
-    $ttl = 21600;
+    $ttl = defined('CLARITY_GITHUB_UPDATE_TTL') ? (int) CLARITY_GITHUB_UPDATE_TTL : 21600;
     if ($cacheData && $cacheTime > 0 && (time() - $cacheTime) < $ttl) {
         $cacheData['checked_at'] = date('Y-m-d H:i:s', $cacheTime);
         return $cacheData;
@@ -1106,6 +1140,13 @@ function clarity_github_update_info(string $repo): ?array
 
     $tag = (string) ($data['tag_name'] ?? $data['name'] ?? '');
     $tag = preg_replace('/^v/i', '', $tag);
+    if ($tag === '') {
+        if ($cacheData) {
+            $cacheData['checked_at'] = $cacheTime ? date('Y-m-d H:i:s', $cacheTime) : '';
+            return $cacheData;
+        }
+        return null;
+    }
     $current = preg_replace('/^v/i', '', (string) CLARITY_VERSION);
     $needUpdate = $tag !== '' && $current !== '' ? version_compare($tag, $current, '>') : false;
 
@@ -1197,12 +1238,14 @@ function clarity_json_option(string $key, array $default = []): array
 function clarity_http_get_json(string $url, array $headers = [], int $timeout = 8): ?array
 {
     $response = '';
+    $headerLines = [];
+    foreach ($headers as $name => $value) {
+        $headerLines[] = $name . ': ' . $value;
+    }
+
     if (function_exists('curl_init')) {
         $ch = curl_init($url);
-        $headerLines = [];
-        foreach ($headers as $name => $value) {
-            $headerLines[] = $name . ': ' . $value;
-        }
+        $userAgent = isset($headers['User-Agent']) ? (string) $headers['User-Agent'] : 'Typecho-Clarity';
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => $timeout,
@@ -1210,23 +1253,27 @@ function clarity_http_get_json(string $url, array $headers = [], int $timeout = 
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_HTTPHEADER => $headerLines,
+            CURLOPT_USERAGENT => $userAgent,
         ]);
         $response = curl_exec($ch);
         curl_close($ch);
-    } else {
-        $headerLines = [];
-        foreach ($headers as $name => $value) {
-            $headerLines[] = $name . ': ' . $value;
-        }
+    }
+
+    if (!is_string($response) || $response === '') {
         $context = stream_context_create([
             'http' => [
                 'method' => 'GET',
                 'header' => implode("\r\n", $headerLines),
                 'timeout' => $timeout,
             ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
         ]);
         $response = @file_get_contents($url, false, $context);
     }
+
     if (!is_string($response) || $response === '') {
         return null;
     }
@@ -2491,160 +2538,4 @@ function clarity_should_show_toc($widget, string $type): bool
         return clarity_bool($widget->fields->toc, $enabled);
     }
     return $enabled;
-}
-
-/**
- * Typecho后台附件增强：图片预览、批量插入、保留官方删除按钮与逻辑
- * @author jkjoy
- * @date 2025-04-25
- */
-Typecho_Plugin::factory('admin/write-post.php')->bottom = array('AttachmentHelper', 'addEnhancedFeatures');
-Typecho_Plugin::factory('admin/write-page.php')->bottom = array('AttachmentHelper', 'addEnhancedFeatures');
-
-class AttachmentHelper {
-    public static function addEnhancedFeatures() {
-        ?>
-        <style>
-        #file-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;padding:15px;list-style:none;margin:0;}
-        #file-list li{position:relative;border:1px solid #e0e0e0;border-radius:4px;padding:10px;background:#fff;transition:all 0.3s ease;list-style:none;margin:0;}
-        #file-list li:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-        #file-list li.loading{opacity:0.7;pointer-events:none;}
-        .att-enhanced-thumb{position:relative;width:100%;height:150px;margin-bottom:8px;background:#f5f5f5;overflow:hidden;border-radius:3px;display:flex;align-items:center;justify-content:center;}
-        .att-enhanced-thumb img{width:100%;height:100%;object-fit:contain;display:block;}
-        .att-enhanced-thumb .file-icon{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:40px;color:#999;}
-        .att-enhanced-finfo{padding:5px 0;}
-        .att-enhanced-fname{font-size:13px;margin-bottom:5px;word-break:break-all;color:#333;}
-        .att-enhanced-fsize{font-size:12px;color:#999;}
-        .att-enhanced-factions{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px;}
-        .att-enhanced-factions button{flex:1;padding:4px 8px;border:none;border-radius:3px;background:#e0e0e0;color:#333;cursor:pointer;font-size:12px;transition:all 0.2s ease;}
-        .att-enhanced-factions button:hover{background:#d0d0d0;}
-        .att-enhanced-factions .btn-insert{background:#467B96;color:white;}
-        .att-enhanced-factions .btn-insert:hover{background:#3c6a81;}
-        .att-enhanced-checkbox{position:absolute;top:5px;right:5px;z-index:2;width:18px;height:18px;cursor:pointer;}
-        .batch-actions{margin:15px;display:flex;gap:10px;align-items:center;}
-        .btn-batch{padding:8px 15px;border-radius:4px;border:none;cursor:pointer;transition:all 0.3s ease;font-size:10px;display:inline-flex;align-items:center;justify-content:center;}
-        .btn-batch.primary{background:#467B96;color:white;}
-        .btn-batch.primary:hover{background:#3c6a81;}
-        .btn-batch.secondary{background:#e0e0e0;color:#333;}
-        .btn-batch.secondary:hover{background:#d0d0d0;}
-        .upload-progress{position:absolute;bottom:0;left:0;width:100%;height:2px;background:#467B96;transition:width 0.3s ease;}
-        </style>
-        <script>
-        $(document).ready(function() {
-            // 批量操作UI按钮
-            var $batchActions = $('<div class="batch-actions"></div>')
-                .append('<button type="button" class="btn-batch primary" id="batch-insert">批量插入</button>')
-                .append('<button type="button" class="btn-batch secondary" id="select-all">全选</button>')
-                .append('<button type="button" class="btn-batch secondary" id="unselect-all">取消全选</button>');
-            $('#file-list').before($batchActions);
-
-            // 插入格式
-            Typecho.insertFileToEditor = function(title, url, isImage) {
-                var textarea = $('#text'), 
-                    sel = textarea.getSelection(),
-                    insertContent = isImage ? '![' + title + '](' + url + ')' : 
-                                            '[' + title + '](' + url + ')';
-                textarea.replaceSelection(insertContent + '\n');
-                textarea.focus();
-            };
-
-            // 批量插入
-            $('#batch-insert').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var content = '';
-                $('#file-list li').each(function() {
-                    if ($(this).find('.att-enhanced-checkbox').is(':checked')) {
-                        var $li = $(this);
-                        var title = $li.find('.att-enhanced-fname').text();
-                        var url = $li.data('url');
-                        var isImage = $li.data('image') == 1;
-                        content += isImage ? '![' + title + '](' + url + ')\n' : '[' + title + '](' + url + ')\n';
-                    }
-                });
-                if (content) {
-                    var textarea = $('#text');
-                    var pos = textarea.getSelection();
-                    var newContent = textarea.val();
-                    newContent = newContent.substring(0, pos.start) + content + newContent.substring(pos.end);
-                    textarea.val(newContent);
-                    textarea.focus();
-                }
-            });
-
-            $('#select-all').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $('#file-list .att-enhanced-checkbox').prop('checked', true);
-                return false;
-            });
-            $('#unselect-all').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $('#file-list .att-enhanced-checkbox').prop('checked', false);
-                return false;
-            });
-
-            // 防止复选框冒泡
-            $(document).on('click', '.att-enhanced-checkbox', function(e) {e.stopPropagation();});
-
-            // 增强文件列表样式，但不破坏li原结构和官方按钮
-            function enhanceFileList() {
-                $('#file-list li').each(function() {
-                    var $li = $(this);
-                    if ($li.hasClass('att-enhanced')) return;
-                    $li.addClass('att-enhanced');
-                    // 只增强，不清空li
-                    // 增加批量选择框
-                    if ($li.find('.att-enhanced-checkbox').length === 0) {
-                        $li.prepend('<input type="checkbox" class="att-enhanced-checkbox" />');
-                    }
-                    // 增加图片预览（如已有则不重复加）
-                    if ($li.find('.att-enhanced-thumb').length === 0) {
-                        var url = $li.data('url');
-                        var isImage = $li.data('image') == 1;
-                        var fileName = $li.find('.insert').text();
-                        var $thumbContainer = $('<div class="att-enhanced-thumb"></div>');
-                        if (isImage) {
-                            var $img = $('<img src="' + url + '" alt="' + fileName + '" />');
-                            $img.on('error', function() {
-                                $(this).replaceWith('<div class="file-icon">🖼️</div>');
-                            });
-                            $thumbContainer.append($img);
-                        } else {
-                            $thumbContainer.append('<div class="file-icon">📄</div>');
-                        }
-                        // 插到插入按钮之前
-                        $li.find('.insert').before($thumbContainer);
-                    }
-
-                });
-            }
-
-            // 插入按钮事件
-            $(document).on('click', '.btn-insert', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var $li = $(this).closest('li');
-                var title = $li.find('.att-enhanced-fname').text();
-                Typecho.insertFileToEditor(title, $li.data('url'), $li.data('image') == 1);
-            });
-
-            // 上传完成后增强新项
-            var originalUploadComplete = Typecho.uploadComplete;
-            Typecho.uploadComplete = function(attachment) {
-                setTimeout(function() {
-                    enhanceFileList();
-                }, 200);
-                if (typeof originalUploadComplete === 'function') {
-                    originalUploadComplete(attachment);
-                }
-            };
-
-            // 首次增强
-            enhanceFileList();
-        });
-        </script>
-        <?php
-    }
 }

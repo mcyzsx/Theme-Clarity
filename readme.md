@@ -1,5 +1,16 @@
+<div align="center">
 
+# Clarity
 
+一款注重阅读体验的三栏博客主题，用清晰的设计让阅读回归本真。
+
+[![Halo](https://img.shields.io/badge/Typecho-1.2.1+-blue?style=flat-square)](https://typecho.org/)
+[![License](https://img.shields.io/badge/License-GPL--3.0-green?style=flat-square)](./LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.3-orange?style=flat-square)](./readme.md)
+
+[🌐 预览站点](https://www.laosun.de)
+
+</div>
 ## 使用
 - 将本主题目录放到 `usr/themes/clarity`
 - Typecho 后台 → 外观 → 启用 `clarity`
@@ -18,9 +29,9 @@
 - `友链页面标题`：显示在友链页与移动端标题
 - `我的博客信息（JSON）`
   - 示例：`{"title":"我的博客","url":"https://example.com","logo":"","description":"一句话","rss":"/feed"}`
-- Links 插件已启用时，友链数据自动读取插件表（按分类分组）
-- Links 插件中 `sort` 字段作为分组名，未设置则归入“友链”
-- `友链数据（JSON）`（当 Links 插件未启用时作为备用）
+- `Enhancement` 插件已启用时，友链数据自动读取插件表（按分类分组）
+- `Enhancement` 插件中 `sort` 字段作为分组名，未设置则归入“友链”
+- `友链数据（JSON）`（当 `Enhancement` 插件未启用时作为备用）
   - 示例：
     ```json
     [
@@ -54,7 +65,8 @@
 
 ### 瞬间
 - `瞬间页面标题`
-- `微语数据（JSON）`（侧边栏与瞬间页共用）
+- `Enhancement` 插件已启用时，瞬间数据自动读取插件表
+- `微语数据（JSON）`（侧边栏与瞬间页共用,未启用`Enhancement`时使用此配置）
   - 示例：
     ```json
     [
@@ -79,9 +91,8 @@
 - `toc`：文章/页面目录开关
 
 ## 说明
-- 浏览量：如需显示真实阅读量，请安装提供 `get_post_view($cid)` 的插件。
-- 友链自主提交、瞬间评论/点赞等 Halo 插件能力在 Typecho 中默认不可用，已保留前端样式。
+
 - 天气组件需填写心知天气 API Key。
 
 ## 致谢
-- Halo 主题 Clarity
+- Halo 主题 [Clarity](https://github.com/acanyo/theme-clarity)
