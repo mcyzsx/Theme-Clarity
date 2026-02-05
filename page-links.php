@@ -231,29 +231,44 @@ if (is_array($groups)) {
           </div>
           <div class="link-submit-actions">
             <?php if ($enhancementEnabled): ?>
-              <div class="link-submit-content">
+              <div class="link-submit-content" style="background: var(--ld-bg-card); border: 1px solid var(--c-border); border-radius: 0.75rem; padding: 1.5rem; margin-top: 1.5rem; box-shadow: 0 4px 12px var(--ld-shadow);">
                 <?php if ($enhancementSubmitted): ?>
-                  <div class="submit-message success" style="display:flex;">
-                    <span class="msg-icon">✓</span>
-                    <span class="msg-text">提交成功，等待审核。</span>
+                  <div class="submit-message success" style="display:flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1.25rem;">
+                    <span class="msg-icon" style="color: #10b981; font-weight: bold;">✓</span>
+                    <span class="msg-text" style="color: var(--c-text);">提交成功，等待审核。</span>
                   </div>
                 <?php endif; ?>
-                <form id="link-submit-form" class="link-submit-form" method="post" action="<?php echo htmlspecialchars($enhancementAction, ENT_QUOTES, 'UTF-8'); ?>">
-                  <div id="submit-message" class="submit-message" style="display:none"></div>
-                  <div class="comment-fields">
-                    <input type="text" name="name" class="comment-input" placeholder="站点名称（必填）" required />
-                    <input type="url" name="url" class="comment-input" placeholder="站点地址（必填）" required />
+                <form id="link-submit-form" class="link-submit-form" method="post" action="<?php echo htmlspecialchars($enhancementAction, ENT_QUOTES, 'UTF-8'); ?>" style="display: flex; flex-direction: column; gap: 1rem;">
+                  <div id="submit-message" class="submit-message" style="display:none; align-items: center; gap: 0.5rem; border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.5rem;"></div>
+                  <div class="comment-fields" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                      <label for="name" style="font-size: 0.875rem; font-weight: 500; color: var(--c-text);">站点名称 <span style="color: var(--c-danger);">*</span></label>
+                      <input type="text" name="name" id="name" class="comment-input" placeholder="请输入站点名称" required style="transition: all 0.2s ease;" />
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                      <label for="url" style="font-size: 0.875rem; font-weight: 500; color: var(--c-text);">站点地址 <span style="color: var(--c-danger);">*</span></label>
+                      <input type="url" name="url" id="url" class="comment-input" placeholder="请输入站点 URL" required style="transition: all 0.2s ease;" />
+                    </div>
                   </div>
-                  <div class="comment-fields">
-                    <input type="email" name="email" class="comment-input" placeholder="联系邮箱（可选）" />
-                    <input type="url" name="image" class="comment-input" placeholder="Logo 地址（可选）" />
+                  <div class="comment-fields" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                      <label for="email" style="font-size: 0.875rem; font-weight: 500; color: var(--c-text);">联系邮箱</label>
+                      <input type="email" name="email" id="email" class="comment-input" placeholder="请输入联系邮箱（可选）" style="transition: all 0.2s ease;" />
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                      <label for="image" style="font-size: 0.875rem; font-weight: 500; color: var(--c-text);">Logo 地址</label>
+                      <input type="url" name="image" id="image" class="comment-input" placeholder="请输入 Logo 地址（可选）" style="transition: all 0.2s ease;" />
+                    </div>
                   </div>
-                  <textarea name="description" class="comment-textarea" placeholder="站点简介（可选）"></textarea>
+                  <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="description" style="font-size: 0.875rem; font-weight: 500; color: var(--c-text);">站点简介</label>
+                    <textarea name="description" id="description" class="comment-textarea" placeholder="请输入站点简介（可选）" style="min-height: 100px; transition: all 0.2s ease;"></textarea>
+                  </div>
                   <input type="hidden" name="sort" value="" />
                   <input type="hidden" name="user" value="" />
                   <input type="hidden" name="do" value="submit" />
-                  <div class="comment-actions">
-                    <button type="submit" class="z-btn primary" id="enhancement-submit-btn">
+                  <div class="comment-actions" style="margin-top: 0.5rem;">
+                    <button type="submit" class="z-btn primary" id="enhancement-submit-btn" style="background: var(--c-primary); color: #fff; border: none; border-radius: 0.65rem; padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease;">
                       <span class="icon-[ph--paper-plane-right-bold]"></span>
                       <span>提交申请</span>
                     </button>
