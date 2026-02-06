@@ -565,6 +565,60 @@ function themeConfig($form)
     );
     $form->addInput($photosData);
 
+    // 友链朋友圈设置
+    $fcircleTitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_fcircle_title',
+        null,
+        '友链朋友圈',
+        _t('友链朋友圈页面标题')
+    );
+    $form->addInput($fcircleTitle);
+
+    $fcircleDesc = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_fcircle_desc',
+        null,
+        '汇聚友链博客的最新动态',
+        _t('友链朋友圈页面描述')
+    );
+    $form->addInput($fcircleDesc);
+
+    $fcircleApiUrl = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_fcircle_api_url',
+        null,
+        'https://moments.myxz.top/',
+        _t('友链朋友圈 API 地址'),
+        _t('Friend Circle Lite API 地址，用于获取友链文章数据')
+    );
+    $form->addInput($fcircleApiUrl);
+
+    $fcirclePageSize = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_fcircle_page_size',
+        null,
+        '20',
+        _t('友链朋友圈分页条数'),
+        _t('每页显示的文章数量')
+    );
+    $fcirclePageSize->input->setAttribute('class', 'w-10');
+    $form->addInput($fcirclePageSize->addRule('isInteger', _t('请填写整数数字')));
+
+    $fcircleErrorImg = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_fcircle_error_img',
+        null,
+        'https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite@latest/static/favicon.ico',
+        _t('友链朋友圈默认头像'),
+        _t('头像加载失败时显示的默认图片')
+    );
+    $form->addInput($fcircleErrorImg);
+
+    $fcircleCover = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_fcircle_cover',
+        null,
+        '',
+        _t('友链朋友圈封面图'),
+        _t('页面顶部 Banner 背景图，留空使用默认样式')
+    );
+    $form->addInput($fcircleCover);
+
     // 关于页面设置
     $aboutTitle = new \Typecho\Widget\Helper\Form\Element\Text(
         'clarity_about_title',
