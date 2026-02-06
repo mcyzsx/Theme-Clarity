@@ -162,7 +162,26 @@ $renderIcon = function ($icon) {
           <?php $this->footer(); ?>
         </div>
 
-        <p>© <span><?php echo date('Y'); ?></span> <span><?php echo htmlspecialchars($this->options->title, ENT_QUOTES, 'UTF-8'); ?></span></p>
+        <div class="copyright-card">
+          <div class="copyright-nav">
+            <div class="copyright-info">
+              <span class="copyright-powerby">Powerby ©<?php echo date('Y', strtotime(clarity_opt('site_start_time', date('Y')))); ?> — <?php echo date('Y'); ?></span>
+              <a class="copyright-name" href="<?php echo $this->options->siteUrl; ?>" target="_blank" title="<?php echo htmlspecialchars($this->options->title, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php
+                $logoFallback = \Typecho\Common::url('assets/images/logo.svg', $this->options->themeUrl);
+                $logo = clarity_site_logo($logoFallback);
+                ?>
+                <img class="copyright-logo" alt="<?php echo htmlspecialchars($this->options->title, ENT_QUOTES, 'UTF-8'); ?>" src="<?php echo htmlspecialchars($logo ?: $logoFallback, ENT_QUOTES, 'UTF-8'); ?>" loading="lazy" width="16" height="16" style="border-radius: 50%;" />
+                <span class="copyright-title"><?php echo htmlspecialchars($this->options->title, ENT_QUOTES, 'UTF-8'); ?></span>
+              </a>
+            </div>
+            <div class="copyright-theme">
+              <span class="theme-info">采用 </span>
+              <a href="https://github.com/jkjoy/theme-clarity" target="_blank">Clarity</a>
+              <span class="theme-info"> 主题</span>
+            </div>
+          </div>
+        </div>
       </footer>
     </main>
 
@@ -170,11 +189,11 @@ $renderIcon = function ($icon) {
   </div>
 
   <div id="z-panel">
-    <button id="toggle-sidebar" aria-label="切换菜单" onclick="(function (btn) { var sb = document.getElementById('z-sidebar'), mk = document.getElementById('z-sidebar-bgmask'); sb.classList.toggle('show'); mk.classList.toggle('hidden'); btn.classList.toggle('active'); })(this)">
+    <button id="toggle-sidebar" aria-label="切换菜单" onclick="toggleSidebarWithMutex(this, 'z-sidebar', 'z-sidebar-bgmask', 'z-aside', 'z-aside-bgmask')">
       <span class="icon-[ph--sidebar-duotone] rtl-flip" style="display:block"></span>
     </button>
     <?php if (clarity_get('showAside', true) && clarity_bool(clarity_opt('aside_enable', '1'))): ?>
-      <button id="toggle-aside" aria-label="切换侧边栏" onclick="(function (btn) { var as = document.getElementById('z-aside'), mk = document.getElementById('z-aside-bgmask'); as.classList.toggle('show'); mk.classList.toggle('hidden'); btn.classList.toggle('active'); })(this)">
+      <button id="toggle-aside" aria-label="切换侧边栏" onclick="toggleSidebarWithMutex(this, 'z-aside', 'z-aside-bgmask', 'z-sidebar', 'z-sidebar-bgmask')">
         <span class="icon-[ph--align-right-duotone] rtl-flip" style="display:block"></span>
       </button>
     <?php endif; ?>
@@ -187,6 +206,31 @@ $renderIcon = function ($icon) {
       <span class="icon-[ph--arrow-up-bold]" style="display:block"></span>
     </button>
   </div>
+
+  <script>
+    function toggleSidebarWithMutex(btn, sidebarId, maskId, otherSidebarId, otherMaskId) {
+      var sidebar = document.getElementById(sidebarId);
+      var mask = document.getElementById(maskId);
+      var otherSidebar = document.getElementById(otherSidebarId);
+      var otherMask = document.getElementById(otherMaskId);
+      var otherBtn = otherSidebarId === 'z-aside' ? document.getElementById('toggle-aside') : document.getElementById('toggle-sidebar');
+      
+      if (sidebar.classList.contains('show')) {
+        sidebar.classList.remove('show');
+        mask.classList.add('hidden');
+        btn.classList.remove('active');
+      } else {
+        if (otherSidebar && otherSidebar.classList.contains('show')) {
+          otherSidebar.classList.remove('show');
+          if (otherMask) otherMask.classList.add('hidden');
+          if (otherBtn) otherBtn.classList.remove('active');
+        }
+        sidebar.classList.add('show');
+        mask.classList.remove('hidden');
+        btn.classList.add('active');
+      }
+    }
+  </script>
 
   <button id="pc-back-to-top" class="pc-back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
     <svg class="svgIcon" viewBox="0 0 384 512">

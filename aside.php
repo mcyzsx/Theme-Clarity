@@ -16,6 +16,11 @@ $momentsTagLink = function (string $tag) use ($momentsPageUrl, $momentsPageSep):
     return $momentsPageUrl . $momentsPageSep . 'tag=' . urlencode($tag);
 };
 $weatherKey = trim((string) clarity_opt('weather_key', ''));
+
+// 检查当前页面是否使用特定模板（需要隐藏侧边栏组件的模板）
+$hiddenWidgetsTemplates = ['page-links.php', 'page-photos.php'];
+$currentTemplate = $this->template ?? '';
+$shouldHideWidgets = in_array($currentTemplate, $hiddenWidgetsTemplates, true);
 ?>
 
 <?php if (!$showAside): ?>
@@ -24,7 +29,7 @@ $weatherKey = trim((string) clarity_opt('weather_key', ''));
 <?php endif; ?>
 
 <aside id="z-aside">
-  <?php if ($this->is('post') || $this->is('page')): ?>
+  <?php if (($this->is('post') || $this->is('page')) && !$shouldHideWidgets): ?>
     <?php if ($enablePostToc || $enablePageToc): ?>
       <section class="widget toc-widget" id="catalog-widget" style="display:none">
         <hgroup class="widget-title">
@@ -141,7 +146,9 @@ $weatherKey = trim((string) clarity_opt('weather_key', ''));
         })();
       </script>
     <?php endif; ?>
-  <?php else: ?>
+  <?php endif; ?>
+
+  <?php if (!$shouldHideWidgets): ?>
     <?php foreach ($widgets as $widget): ?>
       <?php switch ($widget):
         case 'stats': ?>

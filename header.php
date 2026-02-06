@@ -153,6 +153,15 @@ $preconnect = clarity_parse_lines((string) clarity_opt('preconnect_urls', ''));
       })();
     </script>
     <script type="module" src="<?php $this->options->themeUrl('assets/dist/main.js'); ?>?v=<?php echo CLARITY_VERSION; ?>"></script>
+    
+    <?php if (clarity_bool(clarity_opt('particles_enabled', '1'))): ?>
+    <script src="<?php $this->options->themeUrl('assets/js/particles.js'); ?>?v=<?php echo CLARITY_VERSION; ?>"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        initParticles({});
+      });
+    </script>
+    <?php endif; ?>
 
     <style>
       :root,

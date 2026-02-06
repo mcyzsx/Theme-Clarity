@@ -114,6 +114,49 @@ function themeConfig($form)
     );
     $form->addInput($navActive);
 
+    $headerDefaultTag = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_header_default_tag',
+        null,
+        '<Developer/>',
+        _t('侧边栏头部默认标签'),
+        _t('鼠标悬停前显示的标签')
+    );
+    $form->addInput($headerDefaultTag);
+
+    $headerHoverTag = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_header_hover_tag',
+        null,
+        '<墨染/>',
+        _t('侧边栏头部悬停标签'),
+        _t('鼠标悬停后显示的标签')
+    );
+    $form->addInput($headerHoverTag);
+
+    $headerHoverSubtitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_header_hover_subtitle',
+        null,
+        '♥ 欢迎来到我的博客 ♥',
+        _t('侧边栏头部悬停副标题'),
+        _t('鼠标悬停后显示的副标题')
+    );
+    $form->addInput($headerHoverSubtitle);
+
+    $headerEnableParticles = new \Typecho\Widget\Helper\Form\Element\Checkbox(
+        'clarity_header_particles_enabled',
+        ['1' => _t('启用粒子背景')],
+        ['1'],
+        _t('侧边栏头部粒子效果')
+    );
+    $form->addInput($headerEnableParticles);
+
+    $headerEnableHoverEffect = new \Typecho\Widget\Helper\Form\Element\Checkbox(
+        'clarity_header_hover_effect',
+        ['1' => _t('启用悬停效果')],
+        ['1'],
+        _t('侧边栏头部悬停动画')
+    );
+    $form->addInput($headerEnableHoverEffect);
+
     $showPostAuthor = new \Typecho\Widget\Helper\Form\Element\Checkbox(
         'clarity_show_post_author',
         ['1' => _t('显示作者')],
@@ -611,6 +654,30 @@ function themeConfig($form)
         _t('打字光标字符')
     );
     $form->addInput($excerptCaret);
+
+    $particlesEnabled = new \Typecho\Widget\Helper\Form\Element\Checkbox(
+        'clarity_particles_enabled',
+        ['1' => _t('启用粒子效果')],
+        ['1'],
+        _t('粒子效果')
+    );
+    $form->addInput($particlesEnabled);
+
+    $particlesDensity = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_particles_density',
+        null,
+        '1000',
+        _t('粒子密度（数值越大粒子越少）')
+    );
+    $form->addInput($particlesDensity);
+
+    $particlesSpeed = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_particles_speed',
+        null,
+        '1',
+        _t('粒子速度')
+    );
+    $form->addInput($particlesSpeed);
 
     $outdatedEnabled = new \Typecho\Widget\Helper\Form\Element\Checkbox(
         'clarity_outdated_enabled',
