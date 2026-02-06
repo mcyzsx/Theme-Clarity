@@ -211,6 +211,9 @@ $paged = array_slice($filtered, $offset, $pageSize);
           <?php endif; ?>
 
           <div class="moment-actions">
+            <button class="action-btn comment" title="评论" data-content="<?php echo htmlspecialchars(strip_tags($contentHtml), ENT_QUOTES, 'UTF-8'); ?>">
+              <span class="icon-[ph--chat-circle-dots-bold]"></span>
+            </button>
             <button class="action-btn share" title="复制链接" data-url="<?php echo htmlspecialchars('#' . $momentId, ENT_QUOTES, 'UTF-8'); ?>" onclick="(function(btn){ var text = location.origin + location.pathname + location.search + btn.dataset.url; if (window.clarityCopyText) { window.clarityCopyText(text); } else if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text); } btn.classList.add('copied'); setTimeout(function(){ btn.classList.remove('copied'); }, 2000); })(this);">
               <span class="icon-[ph--link-bold]"></span>
             </button>
@@ -269,5 +272,40 @@ $paged = array_slice($filtered, $offset, $pageSize);
     </div>
   </nav>
 <?php endif; ?>
+
+<?php if ($this->allow('comment')): ?>
+  <h3 class="comment-title">
+    <span class="icon-[ph--chat-circle-text-bold]"></span>
+    评论区
+  </h3>
+  <section class="z-comment" id="comments">
+    <?php $this->need('comments.php'); ?>
+  </section>
+<?php endif; ?>
+
+<script>
+(function() {
+  // 瞬间页面评论功能
+  document.querySelectorAll('.moment-actions .action-btn.comment').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var content = this.getAttribute('data-content') || '';
+      var commentsSection = document.getElementById('comments');
+      if (commentsSection) {
+        commentsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      var textarea = document.querySelector('textarea.comment-textarea') || document.querySelector('textarea[name="text"]');
+      if (textarea) {
+        if (content) {
+          textarea.value = '> ' + content.replace(/\n/g, '\n> ') + '\n\n';
+        }
+        textarea.focus();
+        if (typeof TypechoComment !== 'undefined' && TypechoComment.cancelReply) {
+          TypechoComment.cancelReply();
+        }
+      }
+    });
+  });
+})();
+</script>
 
 <?php $this->need('footer.php'); ?>

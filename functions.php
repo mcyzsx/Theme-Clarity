@@ -619,6 +619,41 @@ function themeConfig($form)
     );
     $form->addInput($fcircleCover);
 
+    // 装备页面设置
+    $equipmentTitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_equipment_title',
+        null,
+        '我的装备',
+        _t('装备页面标题')
+    );
+    $form->addInput($equipmentTitle);
+
+    $equipmentDesc = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_equipment_desc',
+        null,
+        '我的生产力工具',
+        _t('装备页面描述')
+    );
+    $form->addInput($equipmentDesc);
+
+    $equipmentCover = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_equipment_cover',
+        null,
+        '',
+        _t('装备页面封面图'),
+        _t('页面顶部 Banner 背景图，留空使用默认样式')
+    );
+    $form->addInput($equipmentCover);
+
+    $equipmentData = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_equipment_data',
+        null,
+        '',
+        _t('装备数据（JSON）'),
+        _t('装备列表数据，格式示例：[{"name":"MacBook Pro","categroy":"硬件","desc":"主力开发机","image":"","src":"","info":{"芯片":"M1 Pro","内存":"16GB"},"tag":["笔记本","Apple"],"date":"2023-01","money":12999}]')
+    );
+    $form->addInput($equipmentData);
+
     // 关于页面设置
     $aboutTitle = new \Typecho\Widget\Helper\Form\Element\Text(
         'clarity_about_title',
