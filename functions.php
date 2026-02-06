@@ -565,6 +565,181 @@ function themeConfig($form)
     );
     $form->addInput($photosData);
 
+    // 关于页面设置
+    $aboutTitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_title',
+        null,
+        '关于本站',
+        _t('关于页面标题')
+    );
+    $form->addInput($aboutTitle);
+
+    $aboutAvatar = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_avatar',
+        null,
+        '',
+        _t('关于页面头像'),
+        _t('留空使用站点 Logo')
+    );
+    $form->addInput($aboutAvatar);
+
+    $aboutLeftTags = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_about_left_tags',
+        null,
+        "💻 热爱编程\n📝 喜欢写作\n🎮 游戏玩家\n📚 终身学习",
+        _t('左侧浮动标签'),
+        _t('每行一个标签')
+    );
+    $form->addInput($aboutLeftTags);
+
+    $aboutRightTags = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_about_right_tags',
+        null,
+        "乐观 积极 向上\n专注 坚持 创新\n分享 交流 成长\n感恩 包容 开放",
+        _t('右侧浮动标签'),
+        _t('每行一个标签')
+    );
+    $form->addInput($aboutRightTags);
+
+    $aboutHelloTitle1 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_hello_title1',
+        null,
+        '你好，很高兴认识你👋',
+        _t('问候语第一行')
+    );
+    $form->addInput($aboutHelloTitle1);
+
+    $aboutHelloTitle2 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_hello_title2',
+        null,
+        '我叫',
+        _t('问候语前缀')
+    );
+    $form->addInput($aboutHelloTitle2);
+
+    $aboutHelloName = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_hello_name',
+        null,
+        '',
+        _t('问候语名称'),
+        _t('留空使用站点标题')
+    );
+    $form->addInput($aboutHelloName);
+
+    $aboutHelloContent1 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_hello_content1',
+        null,
+        '是一名',
+        _t('问候语描述前缀')
+    );
+    $form->addInput($aboutHelloContent1);
+
+    $aboutHelloContent2 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_hello_content2',
+        null,
+        '博主',
+        _t('问候语描述')
+    );
+    $form->addInput($aboutHelloContent2);
+
+    $aboutTips = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_tips',
+        null,
+        '追求',
+        _t('站点介绍小标题')
+    );
+    $form->addInput($aboutTips);
+
+    $aboutConnect1 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_connect1',
+        null,
+        '源于',
+        _t('站点介绍第一行')
+    );
+    $form->addInput($aboutConnect1);
+
+    $aboutConnect2 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_connect2',
+        null,
+        '热爱而去',
+        _t('站点介绍第二行前缀')
+    );
+    $form->addInput($aboutConnect2);
+
+    $aboutInlineWord = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_inline_word',
+        null,
+        '感受',
+        _t('站点介绍连接词')
+    );
+    $form->addInput($aboutInlineWord);
+
+    $aboutMaskWords = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_about_mask_words',
+        null,
+        "学习\n生活\n程序\n体验",
+        _t('滚动文字'),
+        _t('每行一个，会循环滚动显示')
+    );
+    $form->addInput($aboutMaskWords);
+
+    $aboutMaximTip = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_maxim_tip',
+        null,
+        '座右铭',
+        _t('座右铭小标题')
+    );
+    $form->addInput($aboutMaximTip);
+
+    $aboutMaximTitle1 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_maxim_title1',
+        null,
+        '生活明朗，',
+        _t('座右铭第一行')
+    );
+    $form->addInput($aboutMaximTitle1);
+
+    $aboutMaximTitle2 = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_maxim_title2',
+        null,
+        '万物可爱。',
+        _t('座右铭第二行')
+    );
+    $form->addInput($aboutMaximTitle2);
+
+    $aboutGameTip = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_game_tip',
+        null,
+        '爱好游戏',
+        _t('游戏区域小标题')
+    );
+    $form->addInput($aboutGameTip);
+
+    $aboutGameTitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_game_title',
+        null,
+        '原神',
+        _t('游戏名称')
+    );
+    $form->addInput($aboutGameTitle);
+
+    $aboutGameUid = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_about_game_uid',
+        null,
+        'UID: 123456789',
+        _t('游戏 UID')
+    );
+    $form->addInput($aboutGameUid);
+
+    $aboutSkills = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_about_skills',
+        null,
+        '[{"name":"Vue","color":"#b8f0ae","icon":"https://api.iconify.design/logos:vue.svg"},{"name":"JavaScript","color":"#f7cb4f","icon":"https://api.iconify.design/logos:javascript.svg"},{"name":"CSS","color":"#2c51db","icon":"https://api.iconify.design/logos:css-3.svg"},{"name":"PHP","color":"#777bb4","icon":"https://api.iconify.design/logos:php.svg"},{"name":"Typecho","color":"#467b96","icon":""},{"name":"Node.js","color":"#333333","icon":"https://api.iconify.design/logos:nodejs-icon.svg"}]',
+        _t('技能列表（JSON）'),
+        _t('示例：[{"name":"技能名","color":"#颜色","icon":"图标URL"}]，icon 留空则不显示图标')
+    );
+    $form->addInput($aboutSkills);
+
     $bangumisTitle = new \Typecho\Widget\Helper\Form\Element\Text(
         'clarity_bangumis_title',
         null,

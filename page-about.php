@@ -17,26 +17,33 @@ if (empty($aboutAvatar)) {
     $aboutAvatar = clarity_site_logo(\Typecho\Common::url('assets/images/logo.svg', $this->options->themeUrl));
 }
 
-// 左侧标签
-$aboutLeftTags = clarity_json_option('about_left_tags', [
-    ['text' => '💻 热爱编程'],
-    ['text' => '📝 喜欢写作'],
-    ['text' => '🎮 游戏玩家'],
-    ['text' => '📚 终身学习']
-]);
+// 左侧标签 - 每行一个
+$aboutLeftTagsRaw = trim(clarity_opt('about_left_tags', "💻 热爱编程\n📝 喜欢写作\n🎮 游戏玩家\n📚 终身学习"));
+$aboutLeftTags = [];
+foreach (explode("\n", $aboutLeftTagsRaw) as $line) {
+    $line = trim($line);
+    if ($line !== '') {
+        $aboutLeftTags[] = ['text' => $line];
+    }
+}
 
-// 右侧标签
-$aboutRightTags = clarity_json_option('about_right_tags', [
-    ['text' => '乐观 积极 向上'],
-    ['text' => '专注 坚持 创新'],
-    ['text' => '分享 交流 成长'],
-    ['text' => '感恩 包容 开放']
-]);
+// 右侧标签 - 每行一个
+$aboutRightTagsRaw = trim(clarity_opt('about_right_tags', "乐观 积极 向上\n专注 坚持 创新\n分享 交流 成长\n感恩 包容 开放"));
+$aboutRightTags = [];
+foreach (explode("\n", $aboutRightTagsRaw) as $line) {
+    $line = trim($line);
+    if ($line !== '') {
+        $aboutRightTags[] = ['text' => $line];
+    }
+}
 
 // 问候语设置
 $aboutHelloTitle1 = trim(clarity_opt('about_hello_title1', '你好，很高兴认识你👋'));
 $aboutHelloTitle2 = trim(clarity_opt('about_hello_title2', '我叫'));
-$aboutHelloName = trim(clarity_opt('about_hello_name', $this->options->title));
+$aboutHelloName = trim(clarity_opt('about_hello_name', ''));
+if (empty($aboutHelloName)) {
+    $aboutHelloName = $this->options->title;
+}
 $aboutHelloContent1 = trim(clarity_opt('about_hello_content1', '是一名'));
 $aboutHelloContent2 = trim(clarity_opt('about_hello_content2', '博主'));
 
@@ -46,13 +53,15 @@ $aboutConnect1 = trim(clarity_opt('about_connect1', '源于'));
 $aboutConnect2 = trim(clarity_opt('about_connect2', '热爱而去'));
 $aboutInlineWord = trim(clarity_opt('about_inline_word', '感受'));
 
-// 滚动文字
-$aboutMaskWords = clarity_json_option('about_mask_words', [
-    ['text' => '学习'],
-    ['text' => '生活'],
-    ['text' => '程序'],
-    ['text' => '体验']
-]);
+// 滚动文字 - 每行一个
+$aboutMaskWordsRaw = trim(clarity_opt('about_mask_words', "学习\n生活\n程序\n体验"));
+$aboutMaskWords = [];
+foreach (explode("\n", $aboutMaskWordsRaw) as $line) {
+    $line = trim($line);
+    if ($line !== '') {
+        $aboutMaskWords[] = ['text' => $line];
+    }
+}
 
 // 座右铭
 $aboutMaximTip = trim(clarity_opt('about_maxim_tip', '座右铭'));
@@ -64,15 +73,15 @@ $aboutGameTip = trim(clarity_opt('about_game_tip', '爱好游戏'));
 $aboutGameTitle = trim(clarity_opt('about_game_title', '原神'));
 $aboutGameUid = trim(clarity_opt('about_game_uid', 'UID: 123456789'));
 
-// 技能 - 带图标
-$aboutSkills = clarity_json_option('about_skills', [
-    ['name' => 'Vue', 'color' => '#b8f0ae', 'icon' => 'https://api.iconify.design/logos:vue.svg'],
-    ['name' => 'JavaScript', 'color' => '#f7cb4f', 'icon' => 'https://api.iconify.design/logos:javascript.svg'],
-    ['name' => 'CSS', 'color' => '#2c51db', 'icon' => 'https://api.iconify.design/logos:css-3.svg'],
-    ['name' => 'PHP', 'color' => '#777bb4', 'icon' => 'https://api.iconify.design/logos:php.svg'],
-    ['name' => 'Typecho', 'color' => '#467b96', 'icon' => ''],
-    ['name' => 'Node.js', 'color' => '#333333', 'icon' => 'https://api.iconify.design/logos:nodejs-icon.svg']
-]);
+// 技能 - JSON 格式
+$aboutSkillsRaw = clarity_opt('about_skills', '[{"name":"Vue","color":"#b8f0ae","icon":"https://api.iconify.design/logos:vue.svg"},{"name":"JavaScript","color":"#f7cb4f","icon":"https://api.iconify.design/logos:javascript.svg"},{"name":"CSS","color":"#2c51db","icon":"https://api.iconify.design/logos:css-3.svg"},{"name":"PHP","color":"#777bb4","icon":"https://api.iconify.design/logos:php.svg"},{"name":"Typecho","color":"#467b96","icon":""},{"name":"Node.js","color":"#333333","icon":"https://api.iconify.design/logos:nodejs-icon.svg"}]');
+$aboutSkills = [];
+if (!empty($aboutSkillsRaw)) {
+    $decoded = json_decode($aboutSkillsRaw, true);
+    if (is_array($decoded)) {
+        $aboutSkills = $decoded;
+    }
+}
 ?>
 
 <link rel="stylesheet" href="<?php $this->options->themeUrl('assets/css/about.css'); ?>?v=<?php echo CLARITY_VERSION; ?>">

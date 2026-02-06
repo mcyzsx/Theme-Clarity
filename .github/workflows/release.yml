@@ -1,0 +1,153 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (例如: v1.2.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          # 确保版本号以 v 开头
+          if [[ ! $VERSION =~ ^v ]]; then
+            VERSION="v$VERSION"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Update version in index.php
+        run: |
+          VERSION=${{ env.VERSION }}
+          # 去掉 v 前缀用于文件内容
+          VERSION_NUM=${VERSION#v}
+          sed -i "s/@version [0-9]\+\.[0-9]\+\.[0-9]\+/@version $VERSION_NUM/" index.php
+          echo "Updated index.php version to $VERSION_NUM"
+
+      - name: Get theme name
+        id: get_name
+        run: |
+          # 从仓库名提取主题名
+          REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
+          # 如果主题名以 Theme- 开头，去掉前缀
+          THEME_NAME=${REPO_NAME#Theme-}
+          echo "THEME_NAME=$THEME_NAME" >> $GITHUB_ENV
+          echo "theme_name=$THEME_NAME" >> $GITHUB_OUTPUT
+          echo "Theme name: $THEME_NAME"
+
+      - name: Create package
+        run: |
+          THEME_NAME=${{ env.THEME_NAME }}
+          VERSION=${{ env.VERSION }}
+          PACKAGE_NAME="${THEME_NAME}-${VERSION}"
+          
+          # 创建临时目录
+          mkdir -p "/tmp/$PACKAGE_NAME"
+          
+          # 复制文件（排除不需要的文件）
+          rsync -av --exclude='.git' \
+                    --exclude='.github' \
+                    --exclude='.gitignore' \
+                    --exclude='readme.md' \
+                    --exclude='README.md' \
+                    --exclude='*.md' \
+                    --exclude='node_modules' \
+                    --exclude='package.json' \
+                    --exclude='package-lock.json' \
+                    --exclude='vite.config.js' \
+                    --exclude='.vscode' \
+                    --exclude='.idea' \
+                    ./ "/tmp/$PACKAGE_NAME/"
+          
+          # 创建 zip 包
+          cd /tmp
+          zip -r "$PACKAGE_NAME.zip" "$PACKAGE_NAME"
+          
+          # 移动回工作目录
+          mv "$PACKAGE_NAME.zip" "$GITHUB_WORKSPACE/"
+          
+          echo "Package created: $PACKAGE_NAME.zip"
+          ls -lh "$GITHUB_WORKSPACE/$PACKAGE_NAME.zip"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VERSION=${{ env.VERSION }}
+          
+          # 获取上一个标签
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            # 如果没有上一个标签，获取所有提交
+            CHANGELOG=$(git log --pretty=format:"- %s" --no-merges)
+          else
+            # 获取两个标签之间的提交
+            CHANGELOG=$(git log --pretty=format:"- %s" --no-merges "$PREVIOUS_TAG"..HEAD)
+          fi
+          
+          # 如果没有提交记录，使用默认信息
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="- 版本更新 $VERSION"
+          fi
+          
+          # 保存到文件
+          echo "$CHANGELOG" > CHANGELOG.txt
+          echo "Changelog:"
+          cat CHANGELOG.txt
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: Release ${{ env.VERSION }}
+          body_path: CHANGELOG.txt
+          files: |
+            ${{ env.THEME_NAME }}-${{ env.VERSION }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update version file
+        run: |
+          echo "${{ env.VERSION }}" > VERSION
+          
+      - name: Commit version update
+        if: github.event_name == 'push'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add index.php VERSION
+          git diff --staged --quiet || git commit -m "chore: bump version to ${{ env.VERSION }}"
+          git push || echo "Nothing to push"
+
+      - name: Output release info
+        run: |
+          echo "✅ Release created successfully!"
+          echo "Version: ${{ env.VERSION }}"
+          echo "Package: ${{ env.THEME_NAME }}-${{ env.VERSION }}.zip"
+          echo "Download URL: ${{ steps.create_release.outputs.upload_url }}"
