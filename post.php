@@ -145,45 +145,154 @@ $commentCount = $this->commentsNum ?? 0;
   <?php $this->content(); ?>
 </article>
 
-<div class="post-footer">
-  <?php if (!empty($this->tags)): ?>
-    <section class="tags-section">
-      <div class="title text-creative">文章标签</div>
-      <div class="content tags-list">
-        <?php foreach ($this->tags as $tag): ?>
-          <a class="tag-item" href="<?php echo htmlspecialchars($tag['permalink'], ENT_QUOTES, 'UTF-8'); ?>">#<?php echo htmlspecialchars($tag['name'], ENT_QUOTES, 'UTF-8'); ?></a>
+<div class="post-footer-card">
+  <!-- 文章信息头部 -->
+  <div class="post-footer-header">
+    <h3 class="post-footer-title"><?php echo htmlspecialchars($this->title, ENT_QUOTES, 'UTF-8'); ?></h3>
+    <div class="post-footer-url"><?php echo htmlspecialchars($this->permalink, ENT_QUOTES, 'UTF-8'); ?></div>
+  </div>
+
+  <!-- 文章元信息 -->
+  <div class="post-footer-meta">
+    <div class="meta-item">
+      <span class="meta-label">作者</span>
+      <span class="meta-value"><?php echo htmlspecialchars($this->author->screenName, ENT_QUOTES, 'UTF-8'); ?></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">许可协议</span>
+      <span class="meta-value">
+        <?php if ($isOriginal): ?>
+          <?php echo htmlspecialchars($hasCustomLicense ? $customLicenseText : clarity_opt('license', 'CC BY-NC-SA 4.0'), ENT_QUOTES, 'UTF-8'); ?>
+        <?php else: ?>
+          转载
+        <?php endif; ?>
+      </span>
+    </div>
+  </div>
+
+  <!-- 版权图标 -->
+  <div class="post-footer-copyright">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256"><path fill="currentColor" d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20m0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84m41.59-52.79a52 52 0 1 1 0-62.43a12 12 0 1 1-19.18 14.42a28 28 0 1 0 0 33.6a12 12 0 1 1 19.18 14.41"/></svg>
+  </div>
+
+  <!-- 标签和打赏 -->
+  <div class="post-footer-bottom">
+    <?php if (!empty($this->tags)): ?>
+      <div class="post-footer-tags">
+        <?php foreach ($this->tags as $index => $tag): ?>
+          <a class="tag-pill" href="<?php echo htmlspecialchars($tag['permalink'], ENT_QUOTES, 'UTF-8'); ?>">
+            <?php echo htmlspecialchars($tag['name'], ENT_QUOTES, 'UTF-8'); ?>
+            <span class="tag-count"><?php echo $index + 1; ?></span>
+          </a>
         <?php endforeach; ?>
       </div>
-    </section>
-  <?php endif; ?>
-
-  <section class="license">
-    <?php if ($isOriginal): ?>
-      <div class="title text-creative">许可协议</div>
-      <div class="content">
-        本文采用
-        <a href="<?php echo htmlspecialchars($hasCustomLicense ? $customLicenseUrl : clarity_opt('license_url', ''), ENT_QUOTES, 'UTF-8'); ?>" target="_blank">
-          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style="vertical-align:-0.125em;display:inline">
-            <path fill="currentColor" d="M9 8c1.104 0 2.105.448 2.829 1.173l-1.414 1.413a2 2 0 1 0 0 2.828l1.413 1.414A4.001 4.001 0 0 1 5 12c0-2.208 1.792-4 4-4m9.829 1.173A4.001 4.001 0 0 0 12 12a4.001 4.001 0 0 0 6.828 2.828l-1.414-1.414a2 2 0 1 1 0-2.828zM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12m10-8a8 8 0 1 0 0 16a8 8 0 0 0 0-16" />
-          </svg>
-          <?php if ($hasCustomLicense): ?>
-            <span><?php echo htmlspecialchars($customLicenseText, ENT_QUOTES, 'UTF-8'); ?></span>
-          <?php else: ?>
-            <span><?php echo htmlspecialchars(clarity_opt('license', ''), ENT_QUOTES, 'UTF-8'); ?></span>
-          <?php endif; ?>
-        </a>
-        许可协议，转载请注明出处。
-      </div>
-    <?php else: ?>
-      <?php
-      $replaceHtml = '<a href="' . htmlspecialchars($originUrl, ENT_QUOTES, 'UTF-8') . '" target="_blank">' . htmlspecialchars($originName, ENT_QUOTES, 'UTF-8') . '</a>';
-      $originContent = str_replace('{post_original}', $replaceHtml, $originText);
-      ?>
-      <div class="title text-creative">文章来源</div>
-      <div class="content"><?php echo $originContent; ?></div>
     <?php endif; ?>
-  </section>
+
+    <button class="reward-btn" onclick="toggleRewardModal()">
+      <span class="icon-[ph--sparkle-bold]"></span>
+      <span>打赏</span>
+    </button>
+  </div>
 </div>
+
+<!-- 打赏弹窗 -->
+<div id="reward-modal" class="reward-modal">
+  <div class="reward-modal-overlay" onclick="toggleRewardModal()"></div>
+  <div class="reward-modal-content">
+    <div class="reward-modal-header">
+      <div class="reward-title">
+        <span class="icon-[ph--heart-bold]"></span>
+        <h3><?php echo htmlspecialchars(clarity_opt('reward_title', '打赏作者'), ENT_QUOTES, 'UTF-8'); ?></h3>
+      </div>
+      <button class="reward-close" onclick="toggleRewardModal()">
+        <span class="icon-[ph--x-bold]"></span>
+      </button>
+    </div>
+    <div class="reward-modal-body">
+      <p class="reward-desc"><?php echo htmlspecialchars(clarity_opt('reward_desc', '如果这篇文章对您有帮助，欢迎打赏支持作者继续创作！'), ENT_QUOTES, 'UTF-8'); ?></p>
+      
+      <?php
+      $rewardWechat = clarity_opt('reward_wechat', '');
+      $rewardAlipay = clarity_opt('reward_alipay', '');
+      $rewardQQ = clarity_opt('reward_qq', '');
+      $hasReward = $rewardWechat || $rewardAlipay || $rewardQQ;
+      ?>
+      
+      <?php if ($hasReward): ?>
+        <div class="reward-tabs">
+          <?php if ($rewardWechat): ?>
+            <button class="reward-tab active" data-tab="wechat" onclick="switchRewardTab('wechat')">
+              <span class="icon-[ph--wechat-logo-bold]"></span>
+              <span>微信</span>
+            </button>
+          <?php endif; ?>
+          <?php if ($rewardAlipay): ?>
+            <button class="reward-tab<?php echo !$rewardWechat ? ' active' : ''; ?>" data-tab="alipay" onclick="switchRewardTab('alipay')">
+              <span class="icon-[ph--alipay-logo-bold]"></span>
+              <span>支付宝</span>
+            </button>
+          <?php endif; ?>
+          <?php if ($rewardQQ): ?>
+            <button class="reward-tab<?php echo !$rewardWechat && !$rewardAlipay ? ' active' : ''; ?>" data-tab="qq" onclick="switchRewardTab('qq')">
+              <span class="icon-[ph--qq-logo-bold]"></span>
+              <span>QQ</span>
+            </button>
+          <?php endif; ?>
+        </div>
+        
+        <div class="reward-qrcode-container">
+          <?php if ($rewardWechat): ?>
+            <div class="reward-qrcode active" id="reward-wechat">
+              <img src="<?php echo htmlspecialchars($rewardWechat, ENT_QUOTES, 'UTF-8'); ?>" alt="微信打赏">
+              <span class="reward-tip">微信扫码打赏</span>
+            </div>
+          <?php endif; ?>
+          <?php if ($rewardAlipay): ?>
+            <div class="reward-qrcode<?php echo $rewardWechat ? '' : ' active'; ?>" id="reward-alipay">
+              <img src="<?php echo htmlspecialchars($rewardAlipay, ENT_QUOTES, 'UTF-8'); ?>" alt="支付宝打赏">
+              <span class="reward-tip">支付宝扫码打赏</span>
+            </div>
+          <?php endif; ?>
+          <?php if ($rewardQQ): ?>
+            <div class="reward-qrcode<?php echo ($rewardWechat || $rewardAlipay) ? '' : ' active'; ?>" id="reward-qq">
+              <img src="<?php echo htmlspecialchars($rewardQQ, ENT_QUOTES, 'UTF-8'); ?>" alt="QQ打赏">
+              <span class="reward-tip">QQ扫码打赏</span>
+            </div>
+          <?php endif; ?>
+        </div>
+      <?php else: ?>
+        <div class="reward-empty">
+          <span class="icon-[ph--coffee-bold]"></span>
+          <p>作者暂未设置打赏方式</p>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleRewardModal() {
+  var modal = document.getElementById('reward-modal');
+  if (modal) {
+    modal.classList.toggle('active');
+    document.body.style.overflow = modal.classList.contains('active') ? 'hidden' : '';
+  }
+}
+
+function switchRewardTab(tab) {
+  // 切换标签
+  document.querySelectorAll('.reward-tab').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  document.querySelector('.reward-tab[data-tab="' + tab + '"]').classList.add('active');
+  
+  // 切换二维码
+  document.querySelectorAll('.reward-qrcode').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  document.getElementById('reward-' + tab).classList.add('active');
+}
+</script>
 
 <?php
 $prevPost = null;

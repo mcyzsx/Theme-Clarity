@@ -574,3 +574,386 @@
     margin-left: 0;
   }
 }
+
+/* Post Footer Card Styles */
+.post-footer-card {
+  position: relative;
+  background: var(--c-bg-2, rgba(128, 128, 128, 0.08));
+  border: 1px solid var(--c-border, rgba(128, 128, 128, 0.15));
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.post-footer-card:hover {
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 1px var(--c-primary);
+}
+
+/* Header Section */
+.post-footer-header {
+  margin-bottom: 1rem;
+  padding-right: 100px;
+}
+
+.post-footer-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.post-footer-url {
+  font-size: 0.9rem;
+  color: var(--c-text-2);
+  word-break: break-all;
+  opacity: 0.7;
+}
+
+/* Meta Section */
+.post-footer-meta {
+  display: flex;
+  gap: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.meta-label {
+  font-size: 0.85rem;
+  color: var(--c-text-3);
+  font-weight: 500;
+}
+
+.meta-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--c-text);
+}
+
+/* Copyright Icon */
+.post-footer-copyright {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 100px;
+  height: 100px;
+  opacity: 0.2;
+  color: var(--c-text);
+  pointer-events: none;
+}
+
+.post-footer-copyright svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Bottom Section */
+.post-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--c-border, rgba(128, 128, 128, 0.1));
+}
+
+/* Tags */
+.post-footer-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  background: var(--c-bg-3, rgba(128, 128, 128, 0.1));
+  border: 1px solid var(--c-border, rgba(128, 128, 128, 0.2));
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--c-text);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tag-pill:hover {
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+  color: #fff;
+}
+
+.tag-pill .tag-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--c-bg, rgba(128, 128, 128, 0.15));
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tag-pill:hover .tag-count {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Reward Button */
+.reward-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--c-border, rgba(128, 128, 128, 0.3));
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--c-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reward-btn:hover {
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+  color: #fff;
+}
+
+/* Reward Modal */
+.reward-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.reward-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.reward-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.reward-modal-content {
+  position: relative;
+  background: var(--c-bg, #fff);
+  border: 1px solid var(--c-border, rgba(128, 128, 128, 0.2));
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 400px;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+}
+
+.reward-modal.active .reward-modal-content {
+  transform: scale(1);
+}
+
+.reward-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.reward-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reward-title .icon-\[ph--heart-bold\] {
+  color: #ff4757;
+  font-size: 1.2rem;
+}
+
+.reward-modal-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--c-text);
+  margin: 0;
+}
+
+.reward-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--c-text-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reward-close:hover {
+  background: var(--c-bg-2, rgba(255,255,255,0.1));
+  color: var(--c-text);
+}
+
+.reward-desc {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--c-text-2);
+  margin-bottom: 1.5rem;
+}
+
+/* Reward Tabs */
+.reward-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.reward-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: var(--c-bg-2, rgba(128,128,128,0.1));
+  border: 1px solid var(--c-border, rgba(128,128,128,0.2));
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--c-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reward-tab:hover {
+  background: var(--c-bg-3, rgba(128,128,128,0.15));
+}
+
+.reward-tab.active {
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+  color: #fff;
+}
+
+/* Reward QR Code Container */
+.reward-qrcode-container {
+  position: relative;
+  min-height: 180px;
+}
+
+.reward-qrcode {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.reward-qrcode.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reward-qrcode img {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--c-bg-2, rgba(255,255,255,0.1));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.reward-tip {
+  font-size: 0.85rem;
+  color: var(--c-text-2);
+}
+
+/* Reward Empty State */
+.reward-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 0;
+}
+
+.reward-empty .icon-\[ph--coffee-bold\] {
+  font-size: 3rem;
+  color: var(--c-text-3);
+}
+
+.reward-empty p {
+  font-size: 0.9rem;
+  color: var(--c-text-2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .post-footer-card {
+    padding: 1rem;
+  }
+
+  .post-footer-meta {
+    gap: 2rem;
+  }
+
+  .post-footer-copyright {
+    width: 60px;
+    height: 60px;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .post-footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .reward-qrcode {
+    gap: 1rem;
+  }
+
+  .reward-item img {
+    width: 100px;
+    height: 100px;
+  }
+}

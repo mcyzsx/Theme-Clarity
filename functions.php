@@ -350,6 +350,50 @@ function themeConfig($form)
     );
     $form->addInput($licenseUrl);
 
+    // 打赏设置
+    $rewardTitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_reward_title',
+        null,
+        '打赏作者',
+        _t('打赏弹窗标题')
+    );
+    $form->addInput($rewardTitle);
+
+    $rewardDesc = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_reward_desc',
+        null,
+        '如果这篇文章对您有帮助，欢迎打赏支持作者继续创作！',
+        _t('打赏弹窗描述')
+    );
+    $form->addInput($rewardDesc);
+
+    $rewardWechat = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_reward_wechat',
+        null,
+        '',
+        _t('微信收款码图片链接'),
+        _t('上传微信收款码图片，获取链接后填写')
+    );
+    $form->addInput($rewardWechat);
+
+    $rewardAlipay = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_reward_alipay',
+        null,
+        '',
+        _t('支付宝收款码图片链接'),
+        _t('上传支付宝收款码图片，获取链接后填写')
+    );
+    $form->addInput($rewardAlipay);
+
+    $rewardQQ = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_reward_qq',
+        null,
+        '',
+        _t('QQ收款码图片链接'),
+        _t('上传QQ收款码图片，获取链接后填写（可选）')
+    );
+    $form->addInput($rewardQQ);
+
     $communityImage = new \Typecho\Widget\Helper\Form\Element\Text(
         'clarity_community_image',
         null,
