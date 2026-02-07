@@ -371,6 +371,23 @@ $shouldHideWidgets = in_array($currentTemplate, $hiddenWidgetsTemplates, true);
             <div class="widget-body widget-card"><?php echo clarity_opt('aside_custom_html', ''); ?></div>
           </section>
           <?php break; ?>
+        <?php case 'poetry': ?>
+          <section class="widget poetry-widget">
+            <hgroup class="widget-title text-creative">
+              <span class="icon-[ph--scroll-bold]"></span>
+              今日诗词
+            </hgroup>
+            <div class="widget-body widget-card">
+              <div class="poetry-content" id="jinrishici-sentence">
+                <div class="poetry-loading">
+                  <span class="icon-[ph--spinner-bold] animate-spin"></span>
+                  <span>加载中...</span>
+                </div>
+              </div>
+              <div class="poetry-info" id="jinrishici-info"></div>
+            </div>
+          </section>
+          <?php break; ?>
       <?php endswitch; ?>
     <?php endforeach; ?>
   <?php endif; ?>
@@ -415,6 +432,50 @@ $shouldHideWidgets = in_array($currentTemplate, $hiddenWidgetsTemplates, true);
         el.textContent = text;
         el.title = '更新于 ' + parsed.toLocaleString('zh-CN');
       });
+    })();
+  </script>
+
+  <!-- 今日诗词 SDK -->
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" defer></script>
+  <script>
+    (function() {
+      // 等待 SDK 加载完成
+      function initPoetry() {
+        if (typeof jinrishici === 'undefined') {
+          setTimeout(initPoetry, 100);
+          return;
+        }
+
+        jinrishici.load(function(result) {
+          if (result && result.status === 'success') {
+            var data = result.data;
+            var contentEl = document.getElementById('jinrishici-sentence');
+            var infoEl = document.getElementById('jinrishici-info');
+
+            if (contentEl) {
+              contentEl.innerHTML = '<p class="poetry-line">' + data.content + '</p>';
+            }
+
+            if (infoEl && data.origin) {
+              var info = [];
+              if (data.origin.title) info.push('《' + data.origin.title + '》');
+              if (data.origin.dynasty) info.push('[' + data.origin.dynasty + ']');
+              if (data.origin.author) info.push(data.origin.author);
+
+              if (info.length > 0) {
+                infoEl.innerHTML = '<span class="poetry-origin">' + info.join(' ') + '</span>';
+              }
+            }
+          }
+        });
+      }
+
+      // 页面加载完成后初始化
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initPoetry();
+      } else {
+        document.addEventListener('DOMContentLoaded', initPoetry);
+      }
     })();
   </script>
 </aside>

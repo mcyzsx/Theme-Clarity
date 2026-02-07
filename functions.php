@@ -321,7 +321,7 @@ function themeConfig($form)
         null,
         "stats\ntech-info\ncommunity",
         _t('右侧边栏组件顺序'),
-        _t('每行一个：stats / tech-info / weather / moments / community / sponsor / custom')
+        _t('每行一个：stats / tech-info / weather / moments / community / sponsor / poetry / custom')
     );
     $form->addInput($asideWidgets);
 
