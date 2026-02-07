@@ -957,3 +957,57 @@
     height: 100px;
   }
 }
+
+/* Links Page - My Feed Card Fix */
+.my-feed-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--ld-bg-card);
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.my-feed-card .avatar {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-bg-soft);
+}
+
+.my-feed-card .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.my-feed-card .info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.my-feed-card .author {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--c-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.my-feed-card .title {
+  font-size: 0.9rem;
+  color: var(--c-text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

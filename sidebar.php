@@ -35,39 +35,37 @@ $renderIcon = function ($icon) {
 };
 ?>
 <aside id="z-sidebar" class="<?php echo $menuIconInvert ? 'menu-icon-invert' : ''; ?>">
-  <?php
-  $headerDefaultTag = trim(clarity_opt('header_default_tag', '<Developer/>'));
-  $headerHoverTag = trim(clarity_opt('header_hover_tag', '<墨染/>'));
-  $headerHoverSubtitle = trim(clarity_opt('header_hover_subtitle', '♥ 欢迎来到我的博客 ♥'));
-  $headerEnableParticles = clarity_bool(clarity_opt('header_particles_enabled', '1'));
-  $headerEnableHover = clarity_bool(clarity_opt('header_hover_effect', '1'));
-  ?>
-  <div class="zhilu-header<?php echo $headerEnableHover ? ' header-hover-effect' : ''; ?>"<?php echo $headerEnableHover ? ' onmouseenter="this.classList.add(\'hovered\')" onmouseleave="this.classList.remove(\'hovered\')"' : ''; ?>>
-    <div class="header-particle-bg"></div>
-    <div class="header-particle-bg"></div>
-    <div class="header-particle-bg"></div>
-    <div class="header-particle-bg"></div>
-    
-    <a href="<?php echo $this->options->siteUrl; ?>" class="header-content">
-      <div class="avatar-container">
-        <?php if ($logo): ?>
-          <img src="<?php echo htmlspecialchars($logo, ENT_QUOTES, 'UTF-8'); ?>" class="avatar" alt="<?php echo htmlspecialchars($this->options->title, ENT_QUOTES, 'UTF-8'); ?>" />
-        <?php endif; ?>
+  <div class="clarity-header">
+    <?php if ($emojiTail !== ''): ?>
+      <div class="emoji-tail">
+        <?php
+        $emojis = array_filter(array_map('trim', explode(',', $emojiTail)));
+        foreach ($emojis as $index => $emoji):
+        ?>
+          <span class="split-char" style="--delay: <?php echo ($index * 0.6 - 3); ?>s"><?php echo $emoji; ?></span>
+        <?php endforeach; ?>
       </div>
-      <div class="text-container">
-        <h2 class="name">
-          <?php echo htmlspecialchars($this->options->title, ENT_QUOTES, 'UTF-8'); ?>
-          <span class="developer-tag">
-            <span class="tag-transition tag-default"><?php echo htmlspecialchars($headerDefaultTag, ENT_QUOTES, 'UTF-8'); ?></span>
-            <span class="tag-transition tag-hover moyu"><?php echo htmlspecialchars($headerHoverTag, ENT_QUOTES, 'UTF-8'); ?></span>
-          </span>
-        </h2>
-        <p class="tagline">
-          <span class="subtitle-transition subtitle-default"><?php echo htmlspecialchars($subtitle ?: $this->options->description, ENT_QUOTES, 'UTF-8'); ?></span>
-          <span class="subtitle-transition subtitle-hover love"><?php echo htmlspecialchars($headerHoverSubtitle, ENT_QUOTES, 'UTF-8'); ?></span>
-        </p>
-      </div>
+    <?php endif; ?>
+
+    <a href="<?php echo $this->options->siteUrl; ?>">
+      <?php if ($logo): ?>
+        <img src="<?php echo htmlspecialchars($logo, ENT_QUOTES, 'UTF-8'); ?>" class="clarity-logo<?php echo $showTitle ? ' circle' : ''; ?>" alt="<?php echo htmlspecialchars($this->options->title, ENT_QUOTES, 'UTF-8'); ?>" />
+      <?php endif; ?>
     </a>
+
+    <?php if ($showTitle): ?>
+      <div class="clarity-text">
+        <div class="header-title">
+          <?php
+          $chars = preg_split('//u', $this->options->title, -1, PREG_SPLIT_NO_EMPTY);
+          foreach ($chars as $idx => $char):
+          ?>
+            <span class="split-char" style="--delay: <?php echo (($idx + 1) * 0.1); ?>s"><?php echo htmlspecialchars($char, ENT_QUOTES, 'UTF-8'); ?></span>
+          <?php endforeach; ?>
+        </div>
+        <div class="header-subtitle"><?php echo htmlspecialchars($subtitle, ENT_QUOTES, 'UTF-8'); ?></div>
+      </div>
+    <?php endif; ?>
   </div>
 
   <nav class="sidebar-nav scrollcheck-y">
