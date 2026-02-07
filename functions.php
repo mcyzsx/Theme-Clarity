@@ -394,6 +394,50 @@ function themeConfig($form)
     );
     $form->addInput($rewardQQ);
 
+    // Mastodon 设置
+    $mastodonTitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_mastodon_title',
+        null,
+        '动态',
+        _t('Mastodon 页面标题')
+    );
+    $form->addInput($mastodonTitle);
+
+    $mastodonDesc = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_mastodon_desc',
+        null,
+        '来自 Mastodon 的碎碎念',
+        _t('Mastodon 页面描述')
+    );
+    $form->addInput($mastodonDesc);
+
+    $mastodonInstance = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_mastodon_instance',
+        null,
+        '',
+        _t('Mastodon 实例地址'),
+        _t('例如：https://mastodon.social')
+    );
+    $form->addInput($mastodonInstance);
+
+    $mastodonUserId = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_mastodon_userid',
+        null,
+        '',
+        _t('Mastodon 用户 ID'),
+        _t('数字格式的用户 ID，可从个人资料页面 URL 中获取')
+    );
+    $form->addInput($mastodonUserId);
+
+    $mastodonToken = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_mastodon_token',
+        null,
+        '',
+        _t('Mastodon Access Token（可选）'),
+        _t('如需获取非公开内容，请填写 Access Token')
+    );
+    $form->addInput($mastodonToken);
+
     $communityImage = new \Typecho\Widget\Helper\Form\Element\Text(
         'clarity_community_image',
         null,
