@@ -25,7 +25,7 @@ try {
         $blogAvatar = $author['avatar'] ?: '';
         if (empty($blogAvatar)) {
             // 使用默认头像或 Gravatar
-            $blogAvatar = 'https://gravatar.com/avatar/' . md5(strtolower($author['mail'] ?? '')) . '?s=100&d=mp';
+            $blogAvatar = 'https://cn.cravatar.com/avatar/' . md5(strtolower($author['mail'] ?? '')) . '?s=100&d=mp';
         }
     }
 } catch (Exception $e) {

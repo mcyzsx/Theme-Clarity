@@ -260,6 +260,20 @@ $commentCount = $this->commentsNum ?? 0;
             </div>
           <?php endif; ?>
         </div>
+        
+        <!-- 赞赏者名单链接 -->
+        <?php 
+        $sponsorPageUrl = clarity_opt('sponsor_page_url', '/sponsor.html');
+        if ($sponsorPageUrl): 
+        ?>
+        <a href="<?php echo htmlspecialchars($sponsorPageUrl, ENT_QUOTES, 'UTF-8'); ?>" class="reward-sponsor-link" target="_blank" rel="noopener noreferrer">
+          <div class="reward-sponsor-text">
+            <span class="icon-[ph--users-bold]"></span>
+            赞赏者名单
+          </div>
+          <div class="reward-sponsor-desc">因为你们的支持让我意识到写文章的价值</div>
+        </a>
+        <?php endif; ?>
       <?php else: ?>
         <div class="reward-empty">
           <span class="icon-[ph--coffee-bold]"></span>

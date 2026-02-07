@@ -351,6 +351,15 @@ function themeConfig($form)
     );
     $form->addInput($rewardQQ);
 
+    $sponsorPageUrl = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_sponsor_page_url',
+        null,
+        '/sponsor.html',
+        _t('赞赏者名单页面链接'),
+        _t('打赏弹窗中赞赏者名单按钮的跳转链接，默认为 /sponsor.html')
+    );
+    $form->addInput($sponsorPageUrl);
+
     // Mastodon 设置
     $mastodonTitle = new \Typecho\Widget\Helper\Form\Element\Text(
         'clarity_mastodon_title',
