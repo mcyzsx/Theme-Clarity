@@ -1370,6 +1370,15 @@ function themeFields($layout)
     );
     $layout->addItem($titleColor);
 
+    $customExcerpt = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'post_excerpt',
+        null,
+        '',
+        _t('自定义摘要'),
+        _t('留空则自动截取文章前 120 字作为摘要')
+    );
+    $layout->addItem($customExcerpt);
+
     $aiGenerated = new \Typecho\Widget\Helper\Form\Element\Checkbox(
         'ai_generated',
         ['1' => _t('AI 辅助生成')],
@@ -2812,6 +2821,19 @@ function clarity_get_cover($post): string
 
 function clarity_get_excerpt($post, int $length = 120): string
 {
+    // 1. 优先使用 post_excerpt 自定义字段（新增）
+    $customExcerpt = clarity_get_custom_field_value($post, 'post_excerpt');
+    if ($customExcerpt !== '') {
+        $excerptText = trim(strip_tags($customExcerpt));
+        if ($excerptText !== '') {
+            if ($length > 0) {
+                return \Typecho\Common::subStr($excerptText, 0, $length, '...');
+            }
+            return $excerptText;
+        }
+    }
+
+    // 2. 其次使用 summary 字段（兼容旧版本）
     $summary = clarity_get_custom_field_value($post, 'summary');
     if ($summary !== '') {
         $summaryText = trim(strip_tags($summary));
@@ -2822,6 +2844,8 @@ function clarity_get_excerpt($post, int $length = 120): string
             return $summaryText;
         }
     }
+
+    // 3. 最后自动截取文章内容
     ob_start();
     $post->excerpt($length, '...');
     return trim((string) ob_get_clean());

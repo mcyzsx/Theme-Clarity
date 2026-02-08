@@ -148,7 +148,12 @@ $shouldHideWidgets = in_array($currentTemplate, $hiddenWidgetsTemplates, true);
     <?php endif; ?>
   <?php endif; ?>
 
-  <?php if (!$shouldHideWidgets): ?>
+  <?php
+  // 在文章/页面且开启目录时，只显示目录，不显示其他组件
+  $onlyShowToc = ($this->is('post') && $enablePostToc) || ($this->is('page') && $enablePageToc);
+  ?>
+
+  <?php if (!$shouldHideWidgets && !$onlyShowToc): ?>
     <?php foreach ($widgets as $widget): ?>
       <?php switch ($widget):
         case 'welcome': ?>

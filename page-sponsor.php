@@ -13,7 +13,7 @@ $rewardWechat = clarity_opt('reward_wechat', '');
 
 // 获取赞助者数据
 $sponsors = [];
-$sponsorsUrl = 'https://sponsors.314926.xyz/sponsors/sponsors.json';
+$sponsorsUrl = 'https://home.381359.xyz/data/sponsors.json';
 
 // 使用 cURL 获取远程 JSON 数据
 $ch = curl_init();
@@ -155,7 +155,7 @@ $this->need('header.php');
           已赞助的小伙伴
         </h2>
         <p class="sponsors-subtitle">
-          如果您已赞助，并且想加入赞助名单，<a href="https://github.com/mcyzsx/mcyzsx/edit/main/sponsors/sponsors.json" target="_blank" rel="noopener noreferrer" class="link-primary">请点击这里提交</a>
+          如果您已赞助，并且想加入赞助名单，<a href="https://github.com/yxksw/yxksw/edit/main/public/data/sponsors.json" target="_blank" rel="noopener noreferrer" class="link-primary">请点击这里提交</a>
         </p>
         <div class="sponsors-grid">
           <?php 
