@@ -1,9 +1,8 @@
 <?php
 /**
- * 关于页面模板
- * 
- * @package Theme-Clarity
- * @version 1.0.0
+ * 关于页面
+ *
+ * @package custom
  */
 
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -208,6 +207,13 @@ if (!empty($aboutSkillsRaw)) {
         </div>
     </div>
 </main>
+
+<!-- 评论区域 -->
+<section class="comments-section">
+    <div class="comments-container">
+        <?php $this->need('comments.php'); ?>
+    </div>
+</section>
 
 <script src="<?php $this->options->themeUrl('assets/js/about.js'); ?>?v=<?php echo CLARITY_VERSION; ?>"></script>
 

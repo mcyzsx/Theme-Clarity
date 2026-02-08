@@ -506,3 +506,37 @@ html.dark #about-page .game {
         font-size: 24px;
     }
 }
+
+/* 评论区域样式 */
+.comments-section {
+    max-width: 900px;
+    margin: 2rem auto 0;
+    padding: 0 20px;
+}
+
+.comments-container {
+    background: var(--about-bg-card);
+    border: 1px solid var(--about-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px var(--about-shadow);
+}
+
+/* 深色模式评论区域 */
+.dark .comments-section .comments-container,
+html.dark .comments-section .comments-container {
+    background: var(--about-bg-card);
+    border-color: var(--about-border);
+}
+
+/* 响应式 */
+@media screen and (max-width: 768px) {
+    .comments-section {
+        padding: 0 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .comments-container {
+        padding: 1rem;
+    }
+}

@@ -151,7 +151,154 @@ $shouldHideWidgets = in_array($currentTemplate, $hiddenWidgetsTemplates, true);
   <?php if (!$shouldHideWidgets): ?>
     <?php foreach ($widgets as $widget): ?>
       <?php switch ($widget):
-        case 'stats': ?>
+        case 'welcome': ?>
+          <?php
+          $uniqueId = uniqid();
+          $welcomeShowIp = clarity_bool(clarity_opt('welcome_show_ip', '1'));
+          $cityMessages = clarity_opt('welcome_city_messages', '');
+          $timeMessages = clarity_opt('welcome_time_messages', '');
+          ?>
+          <section class="widget widget-welcome">
+            <hgroup class="widget-title text-creative">访客信息</hgroup>
+            <div class="widget-body widget-card welcome-card">
+              <div class="welcome-content" id="welcome-v2-<?php echo $uniqueId; ?>">
+                <div class="welcome-loading">正在定位中...</div>
+              </div>
+            </div>
+            <?php if ($welcomeShowIp): ?>
+              <script>
+                (function() {
+                  const uniqueId = '<?php echo $uniqueId; ?>';
+                  const cityMessages = <?php echo $cityMessages ?: '{}'; ?>;
+                  const timeMessages = <?php echo $timeMessages ?: '{}'; ?>;
+
+                  function getTimePeriod(hour) {
+                    if (hour >= 5 && hour < 12) return 'morning';
+                    if (hour >= 12 && hour < 14) return 'noon';
+                    if (hour >= 14 && hour < 18) return 'afternoon';
+                    if (hour >= 18 && hour < 22) return 'evening';
+                    return 'night';
+                  }
+
+                  function getTimeIcon(period) {
+                    const icons = {
+                      morning: '☀️',
+                      noon: '🌤️',
+                      afternoon: '⛅',
+                      evening: '🌙',
+                      night: '🌙'
+                    };
+                    return icons[period] || '🌙';
+                  }
+
+                  function renderWelcome(location) {
+                    const now = new Date();
+                    const hour = now.getHours();
+                    const period = getTimePeriod(hour);
+
+                    // 获取城市名称（从 location 数组中提取）
+                    const province = location[1] || '';
+                    const city = location[2] || '';
+                    const cityName = city || province || '未知';
+
+                    // 获取城市欢迎语
+                    let cityWelcome = ['欢迎来自', cityName, '的小友'];
+                    let cityTip = '带我去你的城市逛逛吧！';
+
+                    if (cityMessages[cityName]) {
+                      cityWelcome = [cityMessages[cityName][0]];
+                      cityTip = cityMessages[cityName][1] || cityTip;
+                    } else if (cityMessages[province]) {
+                      cityWelcome = [cityMessages[province][0]];
+                      cityTip = cityMessages[province][1] || cityTip;
+                    } else if (cityMessages.default) {
+                      cityWelcome = [cityMessages.default[0].replace('{city}', cityName)];
+                      cityTip = cityMessages.default[1] || cityTip;
+                    }
+
+                    // 获取时段问候语
+                    let timeGreeting = '晚上好';
+                    let timeTip = '夜生活嗨起来！';
+                    if (timeMessages[period]) {
+                      timeGreeting = timeMessages[period][0];
+                      timeTip = timeMessages[period][1] || timeTip;
+                    }
+
+                    const html = '<div class="welcome-main">' +
+                      '<div class="welcome-city">' + cityWelcome.join('') + ' <span class="welcome-heart">💖</span></div>' +
+                      '<div class="welcome-time">' + getTimeIcon(period) + ' ' + timeGreeting + '，' + timeTip + '</div>' +
+                      '<div class="welcome-tip">Tip：' + cityTip + '</div>' +
+                      '</div>';
+
+                    const el = document.getElementById('welcome-v2-' + uniqueId);
+                    if (el) el.innerHTML = html;
+                  }
+
+                  // 获取地理位置
+                  fetch('https://myip.ipip.net/json')
+                    .then(res => res.json())
+                    .then(data => {
+                      if (data.ret === 'ok' && data.data && data.data.location) {
+                        renderWelcome(data.data.location);
+                      } else {
+                        renderWelcome(['', '', '']);
+                      }
+                    })
+                    .catch(() => {
+                      renderWelcome(['', '', '']);
+                    });
+                })();
+              </script>
+            <?php else: ?>
+              <script>
+                (function() {
+                  const uniqueId = '<?php echo $uniqueId; ?>';
+                  const timeMessages = <?php echo $timeMessages ?: '{}'; ?>;
+
+                  function getTimePeriod(hour) {
+                    if (hour >= 5 && hour < 12) return 'morning';
+                    if (hour >= 12 && hour < 14) return 'noon';
+                    if (hour >= 14 && hour < 18) return 'afternoon';
+                    if (hour >= 18 && hour < 22) return 'evening';
+                    return 'night';
+                  }
+
+                  function getTimeIcon(period) {
+                    const icons = {
+                      morning: '☀️',
+                      noon: '🌤️',
+                      afternoon: '⛅',
+                      evening: '🌙',
+                      night: '🌙'
+                    };
+                    return icons[period] || '🌙';
+                  }
+
+                  const now = new Date();
+                  const hour = now.getHours();
+                  const period = getTimePeriod(hour);
+
+                  let timeGreeting = '晚上好';
+                  let timeTip = '夜生活嗨起来！';
+                  if (timeMessages[period]) {
+                    timeGreeting = timeMessages[period][0];
+                    timeTip = timeMessages[period][1] || timeTip;
+                  }
+
+                  const html = '<div class="welcome-main">' +
+                    '<div class="welcome-city">欢迎访问我的博客 <span class="welcome-heart">💖</span></div>' +
+                    '<div class="welcome-time">' + getTimeIcon(period) + ' ' + timeGreeting + '，' + timeTip + '</div>' +
+                    '<div class="welcome-tip">Tip：希望这里的内容对你有帮助</div>' +
+                    '</div>';
+
+                  const el = document.getElementById('welcome-v2-' + uniqueId);
+                  if (el) el.innerHTML = html;
+                })();
+              </script>
+            <?php endif; ?>
+          </section>
+          <?php break; ?>
+        <?php case 'stats': ?>
           <section class="widget">
             <hgroup class="widget-title text-creative">博客统计</hgroup>
             <div class="widget-body widget-card">

@@ -276,9 +276,9 @@ function themeConfig($form)
     $asideWidgets = new \Typecho\Widget\Helper\Form\Element\Textarea(
         'clarity_aside_widgets',
         null,
-        "stats\ntech-info\ncommunity",
+        "welcome\nstats\ntech-info\ncommunity",
         _t('右侧边栏组件顺序'),
-        _t('每行一个：stats / tech-info / weather / moments / community / sponsor / poetry / custom')
+        _t('每行一个：welcome / stats / tech-info / weather / moments / community / sponsor / poetry / custom')
     );
     $form->addInput($asideWidgets);
 
@@ -435,6 +435,75 @@ function themeConfig($form)
         _t('社区群组描述')
     );
     $form->addInput($communityDesc);
+
+    // Welcome 访客组件配置
+    $welcomeTitle = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_welcome_title',
+        null,
+        '欢迎访客',
+        _t('欢迎组件标题')
+    );
+    $form->addInput($welcomeTitle);
+
+    $welcomeAvatar = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_welcome_avatar',
+        null,
+        '',
+        _t('欢迎组件头像 URL'),
+        _t('留空则使用站点 Logo')
+    );
+    $form->addInput($welcomeAvatar);
+
+    $welcomeGreeting = new \Typecho\Widget\Helper\Form\Element\Text(
+        'clarity_welcome_greeting',
+        null,
+        '你好，欢迎访问我的博客！',
+        _t('欢迎问候语')
+    );
+    $form->addInput($welcomeGreeting);
+
+    $welcomeDesc = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_welcome_desc',
+        null,
+        '这里记录着我的学习笔记、技术分享和生活感悟。\n希望我的文章能对你有所帮助！',
+        _t('欢迎描述'),
+        _t('支持 HTML，每行一个段落')
+    );
+    $form->addInput($welcomeDesc);
+
+    $welcomeShowTime = new \Typecho\Widget\Helper\Form\Element\Checkbox(
+        'clarity_welcome_show_time',
+        ['1' => _t('显示访问时间')],
+        ['1'],
+        _t('欢迎组件选项')
+    );
+    $form->addInput($welcomeShowTime);
+
+    $welcomeShowIp = new \Typecho\Widget\Helper\Form\Element\Checkbox(
+        'clarity_welcome_show_ip',
+        ['1' => _t('显示访客地理位置欢迎语')],
+        ['1'],
+        _t('')
+    );
+    $form->addInput($welcomeShowIp);
+
+    $welcomeCityMessages = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_welcome_city_messages',
+        null,
+        '{"default":["欢迎来自{city}的朋友","带我去你的城市逛逛吧"],"北京":["欢迎来自首都的朋友","京城风光，值得一游"],"上海":["欢迎来自魔都的朋友","外滩夜景，美不胜收"],"广州":["欢迎来自羊城的朋友","食在广州，味在其中"],"深圳":["欢迎来自鹏城的朋友","创新之都，活力无限"],"杭州":["欢迎来自杭城的朋友","西湖美景，天下无双"],"南京":["欢迎来自金陵的朋友","六朝古都，历史悠久"],"苏州":["欢迎来自姑苏的朋友","园林之城，精致典雅"],"成都":["欢迎来自蓉城的朋友","天府之国，美食天堂"],"重庆":["欢迎来自山城的朋友","火锅之都，热情似火"],"西安":["欢迎来自长安的朋友","千年古都，文化厚重"],"武汉":["欢迎来自江城的朋友","九省通衢，英雄城市"],"天津":["欢迎来自津门的朋友","渤海明珠，曲艺之乡"],"青岛":["欢迎来自岛城的朋友","红瓦绿树，碧海蓝天"],"厦门":["欢迎来自鹭岛的朋友","海上花园，文艺之城"],"大连":["欢迎来自滨城的朋友","浪漫之都，时尚大连"],"宁波":["欢迎来自甬城的朋友","书藏古今，港通天下"],"长沙":["欢迎来自星城的朋友","楚汉名城，美食之都"],"郑州":["欢迎来自商都的朋友","中原腹地，华夏之源"],"济南":["欢迎来自泉城的朋友","四面荷花三面柳"],"合肥":["欢迎来自庐州的朋友","三国故地，包拯家乡"],"福州":["欢迎来自榕城的朋友","有福之州，幸福之城"],"昆明":["欢迎来自春城的朋友","四季如春，鲜花常开"],"贵阳":["欢迎来自筑城的朋友","避暑之都，森林之城"],"拉萨":["欢迎来自日光城的朋友","雪域高原，圣洁之地"],"兰州":["欢迎来自金城的朋友","黄河之滨，丝路重镇"],"西宁":["欢迎来自夏都的朋友","青藏高原，清凉世界"],"银川":["欢迎来自凤凰城的朋友","塞上江南，鱼米之乡"],"乌鲁木齐":["欢迎来自亚心之都的朋友","丝路明珠，歌舞之乡"],"哈尔滨":["欢迎来自冰城的朋友","东方莫斯科，冰雪世界"],"长春":["欢迎来自春城的朋友","汽车之城，电影之都"],"沈阳":["欢迎来自盛京的朋友","一朝发祥地，两代帝王都"],"石家庄":["欢迎来自石门的朋友","燕赵大地，英雄辈出"],"太原":["欢迎来自龙城的朋友","三晋大地，晋商故里"],"南昌":["欢迎来自洪城的朋友","物华天宝，人杰地灵"],"南宁":["欢迎来自绿城的朋友","中国绿城，民歌之乡"],"海口":["欢迎来自椰城的朋友","阳光海口，度假天堂"],"三亚":["欢迎来自鹿城的朋友","东方夏威夷，浪漫天涯"],"香港":["欢迎来自东方之珠的朋友","动感之都，购物天堂"],"澳门":["欢迎来自濠江的朋友","中西合璧，博彩之都"],"台北":["欢迎来自宝岛的朋友","美丽台湾，美食之都"]}',
+        _t('城市欢迎语配置'),
+        _t('JSON 格式：{"城市名": ["欢迎语", "提示语"], "default": ["默认欢迎语", "默认提示"]}')
+    );
+    $form->addInput($welcomeCityMessages);
+
+    $welcomeTimeMessages = new \Typecho\Widget\Helper\Form\Element\Textarea(
+        'clarity_welcome_time_messages',
+        null,
+        '{"morning":["早上好","一日之计在于晨"],"noon":["中午好","记得按时吃饭"],"afternoon":["下午好","保持专注，继续加油"],"evening":["晚上好","夜生活嗨起来"],"night":["夜深了","早点休息，晚安"]}',
+        _t('时段问候语配置'),
+        _t('JSON 格式：{"morning": ["问候", "提示"], "noon": [...]}')
+    );
+    $form->addInput($welcomeTimeMessages);
 
     $sponsorTitle = new \Typecho\Widget\Helper\Form\Element\Text(
         'clarity_sponsor_title',
@@ -2903,7 +2972,7 @@ function clarity_get_widgets(): array
 {
     $raw = trim((string) clarity_opt('aside_widgets', ''));
     if ($raw === '') {
-        return ['stats', 'tech-info', 'community'];
+        return ['welcome', 'stats', 'tech-info', 'community'];
     }
     $items = clarity_parse_lines($raw);
     return $items;
