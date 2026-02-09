@@ -3037,8 +3037,15 @@ function clarity_should_show_toc($widget, string $type): bool
     if (!$enabled) {
         return false;
     }
-    if (isset($widget->fields->toc)) {
-        return clarity_bool($widget->fields->toc, $enabled);
+    try {
+        if (is_object($widget) && isset($widget->fields)) {
+            $fields = $widget->fields;
+            if (is_object($fields) && isset($fields->toc)) {
+                return clarity_bool($fields->toc, $enabled);
+            }
+        }
+    } catch (Exception $e) {
+        // 访问 fields 出错时返回默认设置
     }
     return $enabled;
 }
