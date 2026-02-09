@@ -2,9 +2,9 @@
 /**
  * 基于 halo主题 Clarity 修改的 Typecho 主题
  * @package Clarity
- * @author 异飨客
- * @version 1.0.3
- * @link https://blog.314926.xyz
+ * @author jkjoy
+ * @version 1.1.1
+ * @link https://jkjoy.de
  */
 clarity_set('showAside', true);
 clarity_set('pageTitle', null);
