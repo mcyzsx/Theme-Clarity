@@ -15,6 +15,8 @@ if (!empty($pageTitle)) {
     $documentTitle = $siteDesc ? ($siteTitle . $sep . $siteDesc) : $siteTitle;
 }
 
+$documentTitle = html_entity_decode((string) $documentTitle, ENT_QUOTES, 'UTF-8');
+
 $metaDescription = $siteDesc;
 if ($this->is('post') || $this->is('page')) {
     $metaDescription = clarity_get_excerpt($this, 120) ?: $siteDesc;
