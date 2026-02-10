@@ -35,6 +35,7 @@
 
 .comment-body {
   flex: 1;
+  font-weight: 400;
   min-width: 0;
 }
 
@@ -147,10 +148,29 @@
   padding: 1rem;
 }
 
+.respond-title {
+  margin-bottom: 0.75rem;
+}
+
 .comment-item > .comment-respond {
   flex-basis: 100%;
   margin-left: calc(48px + 0.9rem);
   max-width: calc(100% - 48px - 0.9rem);
+}
+
+.comment-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.link-submit-form {
+  display: grid;
+  gap: 0.85rem;
+  padding-bottom: 1rem;
+}
+
+.link-submit-form .comment-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .comment-fields {
@@ -168,8 +188,12 @@
   width: 100%;
 }
 
+.comment-textarea {
+  min-height: 5.5rem;
+}
+
 .comment-actions {
-  margin-top: 0.75rem;
+  margin-top: 0;
 }
 
 .search-modal {
@@ -393,6 +417,9 @@
 
 @media (max-width: 768px) {
   .comment-fields {
+    grid-template-columns: 1fr;
+  }
+  .link-submit-form .comment-fields {
     grid-template-columns: 1fr;
   }
   .comment-children {
