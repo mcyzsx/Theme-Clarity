@@ -268,7 +268,27 @@ if (is_array($groups)) {
                   <input type="hidden" name="user" value="" />
                   <input type="hidden" name="do" value="submit" />
                   <div class="comment-actions">
-                    <?php if (class_exists('Enhancement_Plugin') && Enhancement_Plugin::turnstileReady()):echo Enhancement_Plugin::turnstileRenderBlock('link-submit'); endif; ?>
+                    <?php
+                    $turnstileDebug = '';
+                    if (class_exists('Enhancement_Plugin')) {
+                        $turnstileEnabled = Enhancement_Plugin::turnstileEnabled();
+                        $turnstileSiteKey = Enhancement_Plugin::turnstileSiteKey();
+                        $turnstileSecretKey = Enhancement_Plugin::turnstileSecretKey();
+                        $turnstileReady = Enhancement_Plugin::turnstileReady();
+                        if (!$turnstileEnabled) {
+                            $turnstileDebug = '<!-- Turnstile 未启用 -->';
+                        } elseif ($turnstileSiteKey === '') {
+                            $turnstileDebug = '<!-- Turnstile Site Key 为空 -->';
+                        } elseif ($turnstileSecretKey === '') {
+                            $turnstileDebug = '<!-- Turnstile Secret Key 为空 -->';
+                        } elseif ($turnstileReady) {
+                            echo Enhancement_Plugin::turnstileRenderBlock('link-submit');
+                        }
+                    } else {
+                        $turnstileDebug = '<!-- Enhancement 插件未安装 -->';
+                    }
+                    echo $turnstileDebug;
+                    ?>
                     <button type="submit" class="z-btn primary" id="enhancement-submit-btn">
                       <span class="icon-[ph--paper-plane-right-bold]"></span>
                       <span>提交申请</span>
@@ -460,5 +480,9 @@ if (is_array($groups)) {
     });
   })();
 </script>
+
+<?php if (class_exists('Enhancement_Plugin') && Enhancement_Plugin::turnstileReady()): ?>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<?php endif; ?>
 
 <?php $this->need('footer.php'); ?>
