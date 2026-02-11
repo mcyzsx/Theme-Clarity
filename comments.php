@@ -113,7 +113,7 @@ if (!function_exists('threadedComments')) {
 
 <?php if ($this->allow('comment')): ?>
   <div class="comment-respond" id="<?php echo htmlspecialchars($this->respondId, ENT_QUOTES, 'UTF-8'); ?>">
-    <div class="respond-title">
+    <div class="respond-title" id="comments">
       <?php _e('发表评论'); ?>
       <a
         rel="nofollow"
