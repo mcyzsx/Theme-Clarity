@@ -268,6 +268,7 @@ if (is_array($groups)) {
                   <input type="hidden" name="user" value="" />
                   <input type="hidden" name="do" value="submit" />
                   <div class="comment-actions">
+                    <?php if (class_exists('Enhancement_Plugin') && Enhancement_Plugin::turnstileReady()):echo Enhancement_Plugin::turnstileRenderBlock('link-submit'); endif; ?>
                     <button type="submit" class="z-btn primary" id="enhancement-submit-btn">
                       <span class="icon-[ph--paper-plane-right-bold]"></span>
                       <span>提交申请</span>
